@@ -35,7 +35,7 @@
   /* Sidebar */
   --site-title-color: rgb(113, 113, 113);
   --site-subtitle-color: #717171;
-  --sidebar-bg: #f6f8fa;
+  --sidebar-bg: #d5e4ef;
   --sidebar-border-color: #efefef;
   --sidebar-muted-color: #545454;
   --sidebar-active-color: #1d1d1d;
@@ -44,6 +44,13 @@
   --sidebar-btn-color: #8e8e8e;
   --avatar-border-color: white;
 
+  /* ✅ Sidebar Background Image for Light Mode */
+  .sidebar {
+    background-image: url('/assets/img/r-light.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
   /* Topbar */
   --topbar-bg: rgb(255, 255, 255, 0.7);
   --topbar-text-color: rgb(78, 78, 78);
