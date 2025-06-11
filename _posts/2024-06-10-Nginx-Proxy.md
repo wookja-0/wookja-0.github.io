@@ -6,7 +6,6 @@ tags: [nginx, reverse-proxy, docker, loadbalancing]
 description: "Docker 환경에서 Nginx를 이용한 Reverse Proxy 설정 및 로드밸런싱 구현 실습."
 image: https://images.velog.io/post-images/jeff0720/91343f60-eb33-11e8-b115-5df0fc60ff3a/ngnix.png
 ---
-![alt text](nginx-reverse-thumbnail-1200x800.png)
 ## Nginx를 활용한 컨테이너 Reverse Proxy
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2F9CGvL%2FbtsLskNmXuf%2FK1uT4mkuAuHo7d4ueK5FV0%2Fimg.png)
