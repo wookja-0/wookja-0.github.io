@@ -11,7 +11,7 @@ image: https://cdn-images-1.medium.com/max/800/0*W_CczRr748yjqiDc.png
 
 ECS(Elastic Container Service)는 AWS의 컨테이너 오케스트레이션 서비스로, 이번 포스트에서는 **Fargate 런타입**을 기반으로 서버리스 환경에서 Node.js 앱을 배포하는 방법을 정리합니다.
 
-이전 포스트에서 다룬 [ECR 실습 가이드](https://github.com/tkwk5445/Clova-API)에서 만든 이미지를 활용하여 ECS 서비스로 구성합니다.
+이전 포스트에서 다룬 [ECR 실습 가이드]에서 만든 이미지를 활용하여 ECS 서비스로 구성합니다.
 
 
 ---
@@ -119,7 +119,6 @@ ECR에서 이미지를 가져와 ECS에서 배포하고, ALB를 통해 안정적
 
 📎 관련 문서
 
-- [이전 글: ECR에 대하여](/posts/aws_ecr_guide) ← 작성 완료된 포스트 경로로 연결 필요
 - [ECS 공식 문서](https://docs.aws.amazon.com/ko_kr/AmazonECS/latest/developerguide/Welcome.html)
 
 감사합니다 🙌
