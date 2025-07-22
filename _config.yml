@@ -16,10 +16,10 @@ timezone: Asia/Seoul
 
 title: 아놀드의 성장일지                     # the main title
 
-tagline: Cloud Engineer | Solution Architect   # it will display as the sub-title
+tagline: DevOps Engineer | Cloud Engineer | Solution Architect   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
-  Cloud, Devops, AWS, Programing
+  Cloud, Devops, Programing
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
