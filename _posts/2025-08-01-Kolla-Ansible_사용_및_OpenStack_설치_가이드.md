@@ -24,7 +24,7 @@ image: /assets/images/2025-08-01/thumbnail.png
 
 **[OpenStack](https://docs.openstack.org/)**은 퍼블릭 및 프라이빗 클라우드를 위한 오픈소스 인프라 플랫폼입니다. IaaS(Infra as a Service) 구조로, 가상 서버를 빠르게 생성하고 네트워크, 스토리지, 인증 등 인프라 자원을 자동화하여 클라우드 환경을 구축할 수 있습니다.
 
-OpenStack의 네트워크 구조는 크게 Provider 네트워크와 Self-Service 네트워크로 나뉩니다. **[Neutron](https://docs.openstack.org/neutron/latest/)**을 통해 구현됩니다. Provider 네트워크는 물리 네트워크와 직접 연결되어 외부와 통신이 가능하며, Self-Service 네트워크는 프로젝트(테넌트)별로 분리된 가상 네트워크로, 라우터를 통해 외부 네트워크와 연결됩니다.
+OpenStack의 네트워크 구조는 크게 Provider 네트워크와 Self-Service 네트워크로 구분됩니다. **[Neutron](https://docs.openstack.org/neutron/latest/)**을 통해 관리되며, Provider 네트워크는 물리 네트워크와 직접 연결되어 외부와 바로 통신할 수 있습니다. 반면, Self-Service 네트워크는 프로젝트(테넌트)별로 분리된 가상 네트워크로 구성되며, 라우터를 통해 외부 네트워크와 연결됩니다.
 
 제가 구성한 환경에서는 VM들이 Self-Service 네트워크(10.0.0.x 대역)에 위치하고, 외부 네트워크(192.168.0.x)와 **[Floating IP](https://docs.openstack.org/python-openstackclient/pike/cli/command-objects/floating-ip.html)**를 통해 통신합니다. Floating IP는 외부에서 VM에 접근할 때 **[DNAT](https://docs.openstack.org/developer/dragonflow/specs/distributed_dnat.html)**로 내부 IP로 변환되고, VM에서 외부로 나갈 때는 **[SNAT](https://docs.openstack.org/neutron/pike/admin/intro-nat.html)**로 외부 IP로 변환되어 트래픽이 전달됩니다. 이러한 네트워크 흐름은 Neutron의 L3 Agent와 **[OVS](https://docs.openstack.org/neutron/latest/admin/deploy-ovs-selfservice.html)**(Open vSwitch)에서 처리됩니다.
 
@@ -560,4 +560,3 @@ ovs-vsctl show
 ```
 
 ---
-
