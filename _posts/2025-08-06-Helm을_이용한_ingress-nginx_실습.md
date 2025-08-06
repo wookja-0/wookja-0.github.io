@@ -3,7 +3,7 @@ title: "[K8s] Helm을 이용한 Ingress-NGINX 사용 해보기"
 date: 2025-08-06 00:00:00 +0900
 categories: ['Kubernetes']
 tags: ['helm', 'ingress-nginx', 'kubernetes']
-description: "Helm Chart로 Ingress-NGINX를 설치하고, 간단한 서비스 라우팅 실습까지 단계별로 정리합니다."
+description: "Helm Chart로 Ingress-NGINX를 설치하고 경로기반 라우팅을 구성 해보자."
 image: assets/images/2025-08-06/nginx-ingress-1.png
 ---
 
