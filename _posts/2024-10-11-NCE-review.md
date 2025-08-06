@@ -15,7 +15,7 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## ✅ 사전 지식
+## 사전 지식
 
 현재 회사에서 클라우드 엔지니어로 재직 중이며, 10~20여 고객사의 클라우드 운영을 맡고 있습니다.
 
@@ -25,7 +25,7 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## 🕒 준비 기간
+## 준비 기간
 
 - **총 소요 기간**: 약 30~40일
 - **학습 시간**: 평일 1~2시간, 주말 3시간 내외
@@ -36,7 +36,7 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## 📚 시험 준비 방법
+## 시험 준비 방법
 
 ### 1. 공인 교육 수강
 
@@ -54,25 +54,25 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ## 📘 과목별 후기
 
-### 🧮 301 - Compute/Storage
+### 301 - Compute/Storage
 
 - 4과목 중 가장 평이한 난이도
 - Docker/Kubernetes 관련 문제가 40% 정도
 - Kubernetes Control Plane 관련 심화 문제도 출제
 
-### 🌐 302 - Network/Media
+### 302 - Network/Media
 
 - Network/Media 서비스 중심
 - 로드밸런서 개념 및 상황별 적용 문제
 - Media 관련 서비스는 교본 암기가 중요
 
-### 🔐 303 - DB/Management/Analytics & Security
+### 303 - DB/Management/Analytics & Security
 
 - 가장 어려운 과목 중 하나
 - ACG, SQL Injection, Hadoop, Cloud Search 등
 - 교본 전체 암기가 필요했던 지엽적 문제 다수
 
-### 🧠 305 - Application/AI & Architect/Advanced
+### 305 - Application/AI & Architect/Advanced
 
 - Application/AI 쪽 난이도 매우 높음
 - MSA, SOA, 3-Tier 등 아키텍처 이해 필요
@@ -80,7 +80,7 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## 🏁 총평
+## 총평
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FBhWHJ%2FbtsLc3KxJ9t%2FkG715NBlBqUNpuh6j9vyck%2Ftfile.dat)
 

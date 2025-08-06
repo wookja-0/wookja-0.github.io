@@ -9,8 +9,7 @@ image: https://cdn-images-1.medium.com/max/800/1*qT_CNWUROdrOgSbCRtcXbQ.png
 
 저번 포스트에서 **Ncloud CLI** 를 이용하여 리소스 확인법에 대해 알아보았습니다.
 
-[**[NCLOUD] CLI를 통한 리소스 확인 법**  
- _Ncloud CLI를 활용 해 보자_ medium.com](https://medium.com/brickmate-cloud/ncp-cli%EB%A5%BC-%ED%86%B5%ED%95%9C-%EB%A6%AC%EC%86%8C%EC%8A%A4-%ED%99%95%EC%9D%B8-%EB%B2%95-bbf0d1029bb4 "https://medium.com/brickmate-cloud/ncp-cli%EB%A5%BC-%ED%86%B5%ED%95%9C-%EB%A6%AC%EC%86%8C%EC%8A%A4-%ED%99%95%EC%9D%B8-%EB%B2%95-bbf0d1029bb4")[](https://medium.com/brickmate-cloud/ncp-cli%EB%A5%BC-%ED%86%B5%ED%95%9C-%EB%A6%AC%EC%86%8C%EC%8A%A4-%ED%99%95%EC%9D%B8-%EB%B2%95-bbf0d1029bb4)
+[**[NCLOUD] CLI를 통한 리소스 확인 법**](https://wookja-0.github.io/posts/NCLOUD_CLI%EB%A5%BC_%ED%86%B5%ED%95%9C_%EB%A6%AC%EC%86%8C%EC%8A%A4_%ED%99%95%EC%9D%B8_%EB%B2%95/)
 
 이번 주제에서는 **Ncloud CLI** 를 이용하여 **VPC, Subnet, Server** 를 생성하는 포스트를 작성 해 보겠습니다.
 
