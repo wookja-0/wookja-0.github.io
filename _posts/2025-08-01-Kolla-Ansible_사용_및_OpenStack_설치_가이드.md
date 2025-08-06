@@ -1,6 +1,6 @@
 ---
 title: "[OpenStack] Kolla-Ansible을 활용한 OpenStack 개발 환경 구축 해보기"
-date: 2025-08-01 00:00:00 +0900
+date: 2025-08-01
 categories: ['OpenStack']
 tags: ['kolla-ansible', 'openstack', 'ubuntu', 'network']
 description: "Kolla-Ansible을 사용하여 OpenStack을 배포해보자"
