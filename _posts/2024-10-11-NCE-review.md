@@ -52,7 +52,7 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## 📘 과목별 후기
+## 과목별 후기
 
 ### 301 - Compute/Storage
 
