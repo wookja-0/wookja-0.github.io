@@ -13,7 +13,7 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## 💡 시험 계기
+## 1. 시험 계기
 
 현재 회사에서 클라우드 엔지니어로 재직 중이며, VM 위에 Docker 컨테이너 기반으로 프로젝트를 운영 중입니다.  
 향후 **EKS 및 Kubernetes 기반으로 전환**을 대비해 CKA 자격증에 도전하게 되었습니다.
@@ -22,7 +22,7 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## 📚 사전 지식
+## 2. 사전 지식
 
 - Linux 및 Vi(Vim) 사용에 익숙함
 - AWS, NCP 기반의 인프라 경험
@@ -32,7 +32,7 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## ⏱️ 준비 기간
+## ⏱3. 준비 기간
 
 - **총 기간**: 약 2개월
 - **평일**: 1시간 30분
@@ -42,28 +42,28 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## 🛠️ 시험 준비 방법
+## 4. 시험 준비 방법
 
-### 1. Udemy 강의 수강
+### 4-1. Udemy 강의 수강
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FsslEZ%2FbtsLdhV4glT%2FwGz0QtSMypBK3hlymgcg6K%2Ftfile.dat)
 
 - Lightning Lab + Mock Exams 중심으로 반복 학습
 - 실전 스타일 문제로 감각 익히기
 
-### 2. YouTube 강의 활용
+### 4-2. YouTube 강의 활용
 
 - [TTABAE-LEARN CKA 강의](https://www.youtube.com/playlist?list=PLApuRlvrZKojqx9-wIvWP3MPtgy2B372f) (이성미 강사님)
 - 3회 반복 시청 → 구조적 이해에 도움
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGCYxQ%2FbtsLbPl7FZW%2FgVTaRwAkGixxgoRWIweKEk%2Ftfile.dat)
 
-### 3. 기출문제 후기 정독
+### 4-3. 기출문제 후기 정독
 
 - [피터의 개발이야기](https://peterica.tistory.com/348) 블로그 활용
 - 기출 내용과 실제 문제 유사성 높음
 
-### 4. Killer.sh 모의고사
+### 4-4. Killer.sh 모의고사
 
 - 복붙 연습(Ctrl+C / Shift+V)
 - `kubectl config use-context` 반복 훈련
@@ -71,12 +71,12 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## 🧪 시험 당일
+## 5. 시험 당일
 
 - **시험일**: 일요일 오전 1시
 - **환경**: 회사 회의실 (MacBook Pro 16", 거치대 + 블루투스 키보드)
 
-### 사전 준비
+### 5-1. 사전 준비
 
 - 여권 재발급 (본인 인증용)
 - PSI 접속 → 여권/얼굴 촬영 → 감독관과 영어 채팅
@@ -84,7 +84,7 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## 🔎 기억나는 문제들
+## 6. 기억나는 문제들
 
 다수 문제는 [피터의 개발이야기](https://peterica.tistory.com/348)와 거의 일치:
 
@@ -103,7 +103,7 @@ image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F
 
 ---
 
-## 🧾 합격 후기
+## 7. 합격 후기
 
 - 결과 통보: 시험 응시 24시간 후
 - 최종 점수: **83점** (커트라인: 66점)
