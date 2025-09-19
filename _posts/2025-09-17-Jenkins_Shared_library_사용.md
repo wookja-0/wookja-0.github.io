@@ -1,7 +1,7 @@
 ---
 title: "[Jenkins] Shared Library로 GitOps 파이프라인 표준화하기"
 date: 2025-09-17
-categories: [DevOps]
+categories: [DevOps, CI/CD]
 tags: [jenkins, shared-library, pipeline, groovy, ci/cd]
 description: Jenkins Shared Library를 활용해 파이프라인 코드 중복을 줄이고, 효율적으로 DevOps 자동화를 구현하는 방법.
 image: /assets/images/2025-09-17/jenkins-shared-lib.png
