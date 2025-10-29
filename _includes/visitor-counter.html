@@ -76,11 +76,17 @@
 {% if site.analytics.goatcounter.lambda_url %}
 <meta name="goatcounter-lambda-url" content="{{ site.analytics.goatcounter.lambda_url }}">
 {% endif %}
+{% if site.analytics.goatcounter.total_years %}
+<meta name="goatcounter-total-years" content="{{ site.analytics.goatcounter.total_years }}">
+{% endif %}
 <script>
 // GoatCounter 설정 (HTML 압축 영향 없음)
 window.GOATCOUNTER_SITE_ID = '{{ site.analytics.goatcounter.id }}';
 {% if site.analytics.goatcounter.lambda_url %}
 window.GOATCOUNTER_LAMBDA_URL = '{{ site.analytics.goatcounter.lambda_url }}';
+{% endif %}
+{% if site.analytics.goatcounter.total_years %}
+window.GOATCOUNTER_TOTAL_YEARS = {{ site.analytics.goatcounter.total_years }};
 {% endif %}
 console.log('Visitor counter: GOATCOUNTER_SITE_ID 설정됨:', window.GOATCOUNTER_SITE_ID);
 </script>

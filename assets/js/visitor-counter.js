@@ -1,6 +1,9 @@
 // Visitor Counter Component - 사이드바 하단에 삽입
 (function() {
-  console.log('Visitor counter script loaded');
+  // console noise off by default
+  const VC_DEBUG = false;
+  const vcLog = (...args) => { if (VC_DEBUG) console.log(...args); };
+  vcLog('Visitor counter script loaded');
   let retryCount = 0;
   const maxRetries = 50;
   
@@ -22,7 +25,7 @@
     const sidebarBottom = document.querySelector('.sidebar-bottom, [class*="sidebar-bottom"], .sidebar .sidebar-bottom');
     
     // 디버깅 정보
-    console.log('Visitor counter: sidebar 찾기 시도', { sidebar: !!sidebar, sidebarBottom: !!sidebarBottom, retryCount });
+    vcLog('Visitor counter: sidebar 찾기 시도', { sidebar: !!sidebar, sidebarBottom: !!sidebarBottom, retryCount });
     
     // 사이드바 내의 하단 요소 찾기
     let targetElement = null;
@@ -77,15 +80,15 @@
         // sidebar-bottom 앞에 삽입
         if (targetElement.parentNode) {
           targetElement.parentNode.insertBefore(counterEl, targetElement);
-          console.log('Visitor counter: sidebar-bottom 앞에 삽입 성공');
+          vcLog('Visitor counter: sidebar-bottom 앞에 삽입 성공');
         } else {
           sidebar.appendChild(counterEl);
-          console.log('Visitor counter: sidebar에 추가 성공 (parent 없음)');
+          vcLog('Visitor counter: sidebar에 추가 성공 (parent 없음)');
         }
       } else {
         // 사이드바 맨 아래에 추가
         sidebar.appendChild(counterEl);
-        console.log('Visitor counter: sidebar 맨 아래에 추가 성공');
+        vcLog('Visitor counter: sidebar 맨 아래에 추가 성공');
       }
       
       // 카운터 업데이트 함수 실행
@@ -225,7 +228,7 @@
       const hasLambdaUrl = lambdaUrl && lambdaUrl !== '' && lambdaUrl !== 'undefined';
       
       if (hasLambdaUrl) {
-        console.log('Visitor counter: Lambda URL 확인됨');
+        vcLog('Visitor counter: Lambda URL 확인됨');
       }
       
       if (hasLambdaUrl) {
@@ -256,8 +259,22 @@
         const callGoatCounterTotal = async () => {
           try {
             const cleanUrl = lambdaUrl.replace(/\/$/, '');
-            // 대시보드 Total(pageviews)와 동일하게 기간 파라미터 없이 호출
-            const apiUrl = `${cleanUrl}?siteId=${encodeURIComponent(siteId)}&endpoint=total`;
+            // 총 페이지뷰 기간 설정 (옵션): window/meta에 GOATCOUNTER_TOTAL_YEARS가 있으면 해당 연수만큼 과거부터 조회
+            let apiUrl = `${cleanUrl}?siteId=${encodeURIComponent(siteId)}&endpoint=total`;
+            let years = (typeof window !== 'undefined' && window.GOATCOUNTER_TOTAL_YEARS) ? parseInt(window.GOATCOUNTER_TOTAL_YEARS) : 0;
+            if ((!years || isNaN(years) || years < 0) && typeof document !== 'undefined') {
+              const yearsMeta = document.querySelector('meta[name="goatcounter-total-years"]');
+              if (yearsMeta && yearsMeta.content) {
+                years = parseInt(yearsMeta.content);
+              }
+            }
+            if (years && years > 0) {
+              const end = new Date();
+              const start = new Date();
+              start.setFullYear(start.getFullYear() - years);
+              const toISO = (d) => d.toISOString().split('T')[0];
+              apiUrl += `&start=${toISO(start)}&end=${toISO(end)}`;
+            }
             const response = await fetch(apiUrl, {
               method: 'GET',
               mode: 'cors'
@@ -398,29 +415,29 @@
   
   // 페이지 로드 완료 후 실행 (여러 시점에서 시도)
   const runWhenReady = () => {
-    console.log('Visitor counter: 초기화 시작, readyState:', document.readyState);
+    vcLog('Visitor counter: 초기화 시작, readyState:', document.readyState);
     
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', function() {
-        console.log('Visitor counter: DOMContentLoaded 이벤트 발생');
+        vcLog('Visitor counter: DOMContentLoaded 이벤트 발생');
         insertCounter();
       });
     } else if (document.readyState === 'interactive' || document.readyState === 'complete') {
-      console.log('Visitor counter: DOM이 이미 준비됨, 즉시 실행');
+      vcLog('Visitor counter: DOM이 이미 준비됨, 즉시 실행');
       insertCounter();
     }
     
     // 추가 안전장치: DOM이 준비될 때까지 기다림
     setTimeout(() => {
       if (!document.querySelector('.visitor-counter')) {
-        console.log('Visitor counter: setTimeout 후 재시도');
+        vcLog('Visitor counter: setTimeout 후 재시도');
         insertCounter();
       }
     }, 1000);
     
     // window.onload 후에도 한번 더 시도
     window.addEventListener('load', function() {
-      console.log('Visitor counter: window.load 이벤트 발생');
+      vcLog('Visitor counter: window.load 이벤트 발생');
       if (!document.querySelector('.visitor-counter')) {
         insertCounter();
       }
@@ -428,9 +445,9 @@
   };
   
   // 즉시 실행 시도
-  console.log('Visitor counter: runWhenReady 호출 전');
+  vcLog('Visitor counter: runWhenReady 호출 전');
   runWhenReady();
-  console.log('Visitor counter: runWhenReady 호출 후');
+  vcLog('Visitor counter: runWhenReady 호출 후');
 })();
 console.log('Visitor counter script 끝');
 
