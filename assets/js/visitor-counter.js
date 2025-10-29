@@ -282,10 +282,13 @@
         };
         
         // 응답 파싱 헬퍼 함수
-        const parseCount = (data) => {
+        const parseCount = (data, options = {}) => {
           if (!data) return 0;
           
           // 다양한 응답 형식 지원
+          if (options.preferTotalUTC && typeof data.total_utc !== 'undefined') {
+            return parseInt(data.total_utc) || 0;
+          }
           if (typeof data.total !== 'undefined') {
             return parseInt(data.total) || 0;
           } else if (data.stats && Array.isArray(data.stats)) {
@@ -341,7 +344,8 @@
         callGoatCounterTotal()
           .then(data => {
             console.log('Visitor counter: 총 방문자수 API 응답:', data);
-            const count = parseCount(data);
+            // total_utc 우선 사용 → 없으면 total/합산 사용
+            const count = parseCount(data, { preferTotalUTC: true });
             if (count >= 0) {
               totalEl.textContent = count.toLocaleString('ko-KR');
               localStorage.setItem('gc_total_visits', count.toString());
