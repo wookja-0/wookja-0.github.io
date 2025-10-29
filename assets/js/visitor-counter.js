@@ -295,10 +295,14 @@
           .then(data => {
             console.log('Visitor counter: 오늘 통계 API 응답:', data);
             const count = parseCount(data);
-            if (count >= 0) {
+            // API 응답이 로컬 계산치보다 작으면 덮어쓰지 않음(초기 집계 지연/타임존 어긋남 보호)
+            const current = parseInt((todayEl.textContent || '0').replace(/[^0-9]/g, '')) || 0;
+            if (count >= current) {
               todayEl.textContent = count.toLocaleString('ko-KR');
               setDateVisits(todayStr, count);
               console.log('Visitor counter: 오늘 통계 API 성공', count);
+            } else {
+              console.log('Visitor counter: 오늘 통계 API 값이 현재값보다 작아 유지', { api: count, current });
             }
           })
           .catch((err) => {
@@ -311,10 +315,14 @@
           .then(data => {
             console.log('Visitor counter: 어제 통계 API 응답:', data);
             const count = parseCount(data);
-            if (count >= 0) {
+            // 어제는 0도 유효. 단, 현재 값이 더 크면 유지
+            const current = parseInt((yesterdayEl.textContent || '0').replace(/[^0-9]/g, '')) || 0;
+            if (count >= current) {
               yesterdayEl.textContent = count.toLocaleString('ko-KR');
               setDateVisits(yesterdayStr, count);
               console.log('Visitor counter: 어제 통계 API 성공', count);
+            } else {
+              console.log('Visitor counter: 어제 통계 API 값이 현재값보다 작아 유지', { api: count, current });
             }
           })
           .catch((err) => {
@@ -333,10 +341,13 @@
             console.log('Visitor counter: 총 방문자수 API 응답:', data);
             // 대시보드와 동일: total 사용
             const count = parseCount(data);
-            if (count >= 0) {
+            const current = parseInt((totalEl.textContent || '0').replace(/[^0-9]/g, '')) || 0;
+            if (count >= current) {
               totalEl.textContent = count.toLocaleString('ko-KR');
               localStorage.setItem('gc_total_visits', count.toString());
               console.log('Visitor counter: 총 방문자수 API 성공', count);
+            } else {
+              console.log('Visitor counter: 총 방문자수 API 값이 현재값보다 작아 유지', { api: count, current });
             }
           })
           .catch((err) => {
