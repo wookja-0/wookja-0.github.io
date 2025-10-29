@@ -51,6 +51,11 @@
 </style>
 <script>
 // GoatCounter siteId를 전역 변수로 설정 (HTML 압축 영향 없음)
-window.GOATCOUNTER_SITE_ID = '{{ goatcounter_id }}';
+{% if site.analytics.goatcounter.id %}
+window.GOATCOUNTER_SITE_ID = '{{ site.analytics.goatcounter.id }}'.trim();
+{% else %}
+window.GOATCOUNTER_SITE_ID = '';
+{% endif %}
+console.log('Visitor counter: GOATCOUNTER_SITE_ID 설정됨:', window.GOATCOUNTER_SITE_ID);
 </script>
-<script defer src="{{ '/assets/js/visitor-counter.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/visitor-counter.js' | relative_url }}"></script>

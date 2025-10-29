@@ -107,13 +107,21 @@
     
     // GoatCounter siteId 가져오기 (전역 변수에서)
     var siteId = window.GOATCOUNTER_SITE_ID || '';
-    siteId = siteId ? siteId.trim() : '';
+    siteId = siteId ? String(siteId).trim() : '';
     const prodHost = 'wookja-0.github.io';
     const isProd = location.hostname.endsWith('github.io') || location.hostname === prodHost || location.hostname === 'wookja-0.github.io';
     
     // siteId 확인 (디버깅용)
-    if (!siteId || siteId === '' || siteId.indexOf('{') !== -1) {
-      console.warn('Visitor counter: GoatCounter siteId를 찾을 수 없습니다. siteId:', siteId);
+    if (!siteId || siteId === '' || siteId.indexOf('{') !== -1 || siteId === 'undefined') {
+      // 재시도: window 객체에서 직접 읽기
+      if (typeof window !== 'undefined' && window.GOATCOUNTER_SITE_ID) {
+        siteId = String(window.GOATCOUNTER_SITE_ID).trim();
+      }
+      // 여전히 없으면 경고만 출력 (에러가 아니라 경고)
+      if (!siteId || siteId === '' || siteId.indexOf('{') !== -1 || siteId === 'undefined') {
+        console.warn('Visitor counter: GoatCounter siteId를 찾을 수 없습니다. 로컬 스토리지 값만 표시됩니다. siteId:', siteId, 'window.GOATCOUNTER_SITE_ID:', window.GOATCOUNTER_SITE_ID);
+        // siteId가 없어도 로컬 스토리지 값은 계속 표시하므로 에러로 중단하지 않음
+      }
     }
     
     // 날짜 계산
