@@ -138,14 +138,25 @@
     // GoatCounter 추적은 자동으로 작동하며, 통계는 GoatCounter 대시보드에서 확인할 수 있습니다
     
     // 날짜 계산
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const todayStr = today.toDateString();
-    const yesterdayStr = yesterday.toDateString();
-    const todayISO = today.toISOString().split('T')[0];
-    const yesterdayISO = yesterday.toISOString().split('T')[0];
+    // 화면 표시는 로컬 기준 유지, API 호출은 UTC 기준으로 날짜 고정 (타임존 오프셋으로 하루 밀림 방지)
+    const todayLocal = new Date();
+    todayLocal.setHours(0, 0, 0, 0);
+    const yesterdayLocal = new Date(todayLocal);
+    yesterdayLocal.setDate(yesterdayLocal.getDate() - 1);
+    const todayStr = todayLocal.toDateString();
+    const yesterdayStr = yesterdayLocal.toDateString();
+
+    const toUTCISO = (d) => {
+      const y = d.getUTCFullYear();
+      const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(d.getUTCDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    };
+    const now = new Date();
+    const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const yesterdayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1));
+    const todayISO = toUTCISO(todayUTC);
+    const yesterdayISO = toUTCISO(yesterdayUTC);
     
     // 로컬 스토리지에서 방문 기록 가져오기
     const getDateVisits = (dateStr) => {
@@ -322,7 +333,7 @@
           });
         
         // 총 방문자수 (지난 1년)
-        const oneYearAgo = new Date(today);
+    const oneYearAgo = new Date(todayUTC);
         oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
         const oneYearAgoISO = oneYearAgo.toISOString().split('T')[0];
         
