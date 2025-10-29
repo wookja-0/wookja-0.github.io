@@ -208,60 +208,39 @@
     // GoatCounter API 호출 (공개 엔드포인트 시도)
     // 참고: GoatCounter는 일반적으로 공개 API를 제공하지 않지만, 일부 엔드포인트는 접근 가능할 수 있습니다
     if (isProd && siteId && siteId !== '' && siteId.indexOf('{') === -1 && siteId !== 'undefined') {
-      // API 키 가져오기 (여러 소스에서 시도)
-      let apiKey = window.GOATCOUNTER_API_KEY || '';
+      // Lambda URL 확인
+      let lambdaUrl = window.GOATCOUNTER_LAMBDA_URL || '';
       
       // meta 태그에서도 확인
-      if (!apiKey || apiKey === '' || apiKey === 'undefined') {
-        const apiKeyMeta = document.querySelector('meta[name="goatcounter-api-key"]');
-        if (apiKeyMeta && apiKeyMeta.content) {
-          apiKey = String(apiKeyMeta.content).trim();
-          window.GOATCOUNTER_API_KEY = apiKey; // 캐시
+      if (!lambdaUrl || lambdaUrl === '' || lambdaUrl === 'undefined') {
+        const lambdaMeta = document.querySelector('meta[name="goatcounter-lambda-url"]');
+        if (lambdaMeta && lambdaMeta.content) {
+          lambdaUrl = String(lambdaMeta.content).trim();
+          window.GOATCOUNTER_LAMBDA_URL = lambdaUrl; // 캐시
         }
       }
       
-      const hasApiKey = apiKey && apiKey !== '' && apiKey !== 'undefined';
+      const hasLambdaUrl = lambdaUrl && lambdaUrl !== '' && lambdaUrl !== 'undefined';
       
-      if (hasApiKey) {
-        console.log('Visitor counter: API 키 확인됨 (길이:', apiKey.length, ')');
+      if (hasLambdaUrl) {
+        console.log('Visitor counter: Lambda URL 확인됨');
       }
       
-      if (hasApiKey) {
-        // 인증된 API 호출 (API 키 사용)
-        // GoatCounter API는 Authorization 헤더에 Bearer 토큰 형식 사용
-        const headers = {
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${apiKey}`  // Bearer 토큰 형식
-        };
-        
-        // API 호출 헬퍼 함수
+      if (hasLambdaUrl) {
+        // Lambda를 통한 API 호출 (안전한 방식)
         const callGoatCounterAPI = async (startDate, endDate, label) => {
           try {
-            const response = await fetch(`https://${siteId}.goatcounter.com/api/v0/stats?start=${startDate}&end=${endDate}`, {
+            // Lambda URL 끝의 슬래시 제거
+            const cleanUrl = lambdaUrl.replace(/\/$/, '');
+            const apiUrl = `${cleanUrl}?siteId=${encodeURIComponent(siteId)}&start=${startDate}&end=${endDate}`;
+            const response = await fetch(apiUrl, {
               method: 'GET',
-              headers: headers,
               mode: 'cors'
             });
             
             if (!response.ok) {
-              // Bearer 형식 실패 시 토큰만 직접 시도
-              if (response.status === 401) {
-                const altHeaders = {
-                  'Accept': 'application/json',
-                  'Authorization': apiKey  // Bearer 없이 직접 시도
-                };
-                const altResponse = await fetch(`https://${siteId}.goatcounter.com/api/v0/stats?start=${startDate}&end=${endDate}`, {
-                  method: 'GET',
-                  headers: altHeaders,
-                  mode: 'cors'
-                });
-                
-                if (!altResponse.ok) {
-                  throw new Error(`HTTP ${altResponse.status}`);
-                }
-                return await altResponse.json();
-              }
-              throw new Error(`HTTP ${response.status}`);
+              const errorText = await response.text();
+              throw new Error(`HTTP ${response.status}: ${errorText}`);
             }
             
             return await response.json();
@@ -294,7 +273,8 @@
           .then(data => {
             console.log('Visitor counter: 오늘 통계 API 응답:', data);
             const count = parseCount(data);
-            if (count > 0) {
+            // 0도 유효한 값이므로 count >= 0으로 확인
+            if (count >= 0) {
               todayEl.textContent = count.toLocaleString('ko-KR');
               setDateVisits(todayStr, count);
               console.log('Visitor counter: 오늘 통계 API 성공', count);
@@ -307,7 +287,7 @@
           .then(data => {
             console.log('Visitor counter: 어제 통계 API 응답:', data);
             const count = parseCount(data);
-            if (count > 0) {
+            if (count >= 0) {
               yesterdayEl.textContent = count.toLocaleString('ko-KR');
               setDateVisits(yesterdayStr, count);
               console.log('Visitor counter: 어제 통계 API 성공', count);
@@ -324,7 +304,7 @@
           .then(data => {
             console.log('Visitor counter: 총 방문자수 API 응답:', data);
             const count = parseCount(data);
-            if (count > 0) {
+            if (count >= 0) {
               totalEl.textContent = count.toLocaleString('ko-KR');
               localStorage.setItem('gc_total_visits', count.toString());
               console.log('Visitor counter: 총 방문자수 API 성공', count);

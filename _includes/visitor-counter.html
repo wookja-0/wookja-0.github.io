@@ -51,14 +51,14 @@
 </style>
 {% if site.analytics.goatcounter.id %}
 <meta name="goatcounter-site-id" content="{{ site.analytics.goatcounter.id }}">
-{% if site.analytics.goatcounter.api_key %}
-<meta name="goatcounter-api-key" content="{{ site.analytics.goatcounter.api_key }}">
+{% if site.analytics.goatcounter.lambda_url %}
+<meta name="goatcounter-lambda-url" content="{{ site.analytics.goatcounter.lambda_url }}">
 {% endif %}
 <script>
 // GoatCounter 설정 (HTML 압축 영향 없음)
 window.GOATCOUNTER_SITE_ID = '{{ site.analytics.goatcounter.id }}';
-{% if site.analytics.goatcounter.api_key %}
-window.GOATCOUNTER_API_KEY = '{{ site.analytics.goatcounter.api_key }}';
+{% if site.analytics.goatcounter.lambda_url %}
+window.GOATCOUNTER_LAMBDA_URL = '{{ site.analytics.goatcounter.lambda_url }}';
 {% endif %}
 console.log('Visitor counter: GOATCOUNTER_SITE_ID 설정됨:', window.GOATCOUNTER_SITE_ID);
 </script>

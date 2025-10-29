@@ -62,7 +62,8 @@ analytics:
     id: G-6T45ST30TH
   goatcounter:
     id: tkwk5445
-    api_key: 1fm8qc2qbrbeiny49vpuk4cy9ktj6nj0sohcsuc124v12vx0
+    # API 키는 Lambda 환경 변수에 설정 (클라이언트 노출 방지)
+    lambda_url: https://3tfvnihanlmpih5weotegocefu0qxvtl.lambda-url.ap-northeast-2.on.aws
   umami:
     id: # fill in your Umami ID
     domain: # fill in your Umami domain
