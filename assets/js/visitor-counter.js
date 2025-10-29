@@ -268,19 +268,22 @@
           return 0;
         };
         
+        // GoatCounter API가 404를 반환하는 경우, 로컬 스토리지 값 사용
         // 오늘 통계
         callGoatCounterAPI(todayISO, todayISO, '오늘 통계')
           .then(data => {
             console.log('Visitor counter: 오늘 통계 API 응답:', data);
             const count = parseCount(data);
-            // 0도 유효한 값이므로 count >= 0으로 확인
             if (count >= 0) {
               todayEl.textContent = count.toLocaleString('ko-KR');
               setDateVisits(todayStr, count);
               console.log('Visitor counter: 오늘 통계 API 성공', count);
             }
           })
-          .catch(() => { /* 에러는 이미 로그됨 */ });
+          .catch((err) => {
+            console.warn('Visitor counter: 오늘 통계 API 실패, 로컬 스토리지 값 사용', err.message);
+            // API 실패 시 로컬 스토리지 값 유지
+          });
         
         // 어제 통계
         callGoatCounterAPI(yesterdayISO, yesterdayISO, '어제 통계')
@@ -293,7 +296,10 @@
               console.log('Visitor counter: 어제 통계 API 성공', count);
             }
           })
-          .catch(() => { /* 에러는 이미 로그됨 */ });
+          .catch((err) => {
+            console.warn('Visitor counter: 어제 통계 API 실패, 로컬 스토리지 값 사용', err.message);
+            // API 실패 시 로컬 스토리지 값 유지
+          });
         
         // 총 방문자수 (지난 1년)
         const oneYearAgo = new Date(today);
@@ -310,7 +316,10 @@
               console.log('Visitor counter: 총 방문자수 API 성공', count);
             }
           })
-          .catch(() => { /* 에러는 이미 로그됨 */ });
+          .catch((err) => {
+            console.warn('Visitor counter: 총 방문자수 API 실패, 로컬 스토리지 값 사용', err.message);
+            // API 실패 시 로컬 스토리지 값 유지
+          });
       } else {
         // API 키 없음: 로컬 스토리지 값만 사용
         console.log('Visitor counter: API 키가 없어 로컬 스토리지 값 사용');
