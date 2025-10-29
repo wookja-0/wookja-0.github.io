@@ -32,8 +32,25 @@
 
 .visitor-counter .vc-divider {
   color: var(--bs-border-color);
-  margin: 0 2px;
+  margin: 0 1px; /* 간격 타이트하게 */
   font-size: 10px;
+}
+
+.visitor-counter .vc-icon {
+  margin-right: 4px;
+  font-size: 12px; /* 축소 */
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.visitor-counter .vc-badge {
+  margin-right: 6px; /* 앞쪽 배지로 이동 */
+  padding: 2px 6px;
+  font-size: 10px;
+  color: var(--bs-text-muted);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 999px;
+  line-height: 1;
 }
 
 /* Dark mode support */
@@ -47,6 +64,11 @@
 
 [data-theme="dark"] .visitor-counter .vc-number {
   color: var(--bs-body-color);
+}
+
+[data-theme="dark"] .visitor-counter .vc-badge {
+  color: var(--bs-text-muted);
+  border-color: var(--bs-border-color);
 }
 </style>
 {% if site.analytics.goatcounter.id %}

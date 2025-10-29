@@ -54,6 +54,8 @@
     
     const counterHTML = `
       <div class="visitor-counter">
+        <span class="vc-icon" aria-hidden="true">👥</span>
+        <span class="vc-badge" title="pageviews">방문자</span>
         <span class="vc-label">오늘</span>
         <span id="visitor-today" class="vc-number">-</span>
         <span class="vc-divider">|</span>
