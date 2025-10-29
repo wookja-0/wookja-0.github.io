@@ -63,13 +63,16 @@
     
     retryCount++;
     if (retryCount > maxRetries) {
-      console.warn('Visitor counter: 최대 재시도 횟수 초과');
+      console.error('Visitor counter: 최대 재시도 횟수 초과');
       return;
     }
     
     // 사이드바 하단 영역 찾기 (여러 선택자 시도)
-    const sidebar = document.querySelector('#sidebar, aside#sidebar, .sidebar, [id*="sidebar"]');
+    const sidebar = document.querySelector('#sidebar, aside#sidebar, aside.sidebar, .sidebar, [id*="sidebar"]');
     const sidebarBottom = document.querySelector('.sidebar-bottom, [class*="sidebar-bottom"], .sidebar .sidebar-bottom');
+    
+    // 디버깅 정보
+    console.log('Visitor counter: sidebar 찾기 시도', { sidebar: !!sidebar, sidebarBottom: !!sidebarBottom, retryCount });
     
     // 사이드바 내의 하단 요소 찾기
     let targetElement = null;
@@ -88,6 +91,13 @@
     
     if (!targetElement) {
       // 요소를 찾을 수 없으면 잠시 후 다시 시도
+      if (retryCount === 1) {
+        console.warn('Visitor counter: 사이드바를 찾을 수 없습니다. DOM 구조:', {
+          sidebar: sidebar ? sidebar.tagName : null,
+          sidebarChildren: sidebar ? sidebar.children.length : 0,
+          bodyChildren: document.body ? document.body.children.length : 0
+        });
+      }
       setTimeout(insertCounter, 200);
       return;
     }
@@ -110,20 +120,28 @@
     const counterEl = wrap.firstElementChild;
     
     // 요소 삽입
-    if (targetElement === sidebarBottom || (targetElement !== sidebar && targetElement.parentNode)) {
-      // sidebar-bottom 앞에 삽입
-      if (targetElement.parentNode) {
-        targetElement.parentNode.insertBefore(counterEl, targetElement);
+    try {
+      if (targetElement === sidebarBottom || (targetElement !== sidebar && targetElement.parentNode)) {
+        // sidebar-bottom 앞에 삽입
+        if (targetElement.parentNode) {
+          targetElement.parentNode.insertBefore(counterEl, targetElement);
+          console.log('Visitor counter: sidebar-bottom 앞에 삽입 성공');
+        } else {
+          sidebar.appendChild(counterEl);
+          console.log('Visitor counter: sidebar에 추가 성공 (parent 없음)');
+        }
       } else {
+        // 사이드바 맨 아래에 추가
         sidebar.appendChild(counterEl);
+        console.log('Visitor counter: sidebar 맨 아래에 추가 성공');
       }
-    } else {
-      // 사이드바 맨 아래에 추가
-      sidebar.appendChild(counterEl);
+      
+      // 카운터 업데이트 함수 실행
+      updateVisitorCount();
+    } catch (err) {
+      console.error('Visitor counter: 삽입 실패', err);
+      setTimeout(insertCounter, 500);
     }
-    
-    // 카운터 업데이트 함수 실행
-    updateVisitorCount();
   };
   
   // 카운터 숫자 업데이트 (오늘/어제/총 방문자)
@@ -300,19 +318,29 @@
   
   // 페이지 로드 완료 후 실행 (여러 시점에서 시도)
   const runWhenReady = () => {
+    console.log('Visitor counter: 초기화 시작, readyState:', document.readyState);
+    
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', insertCounter);
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Visitor counter: DOMContentLoaded 이벤트 발생');
+        insertCounter();
+      });
     } else if (document.readyState === 'interactive' || document.readyState === 'complete') {
+      console.log('Visitor counter: DOM이 이미 준비됨, 즉시 실행');
       insertCounter();
     }
+    
     // 추가 안전장치: DOM이 준비될 때까지 기다림
     setTimeout(() => {
       if (!document.querySelector('.visitor-counter')) {
+        console.log('Visitor counter: setTimeout 후 재시도');
         insertCounter();
       }
     }, 1000);
+    
     // window.onload 후에도 한번 더 시도
-    window.addEventListener('load', () => {
+    window.addEventListener('load', function() {
+      console.log('Visitor counter: window.load 이벤트 발생');
       if (!document.querySelector('.visitor-counter')) {
         insertCounter();
       }
