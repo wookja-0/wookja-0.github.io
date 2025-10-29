@@ -254,7 +254,9 @@
         const callGoatCounterTotal = async () => {
           try {
             const cleanUrl = lambdaUrl.replace(/\/$/, '');
-            const apiUrl = `${cleanUrl}?siteId=${encodeURIComponent(siteId)}&endpoint=total`;
+            // 전체 누적 합계: 매우 이른 날짜부터 오늘까지 범위를 명시
+            const totalStart = '2000-01-01';
+            const apiUrl = `${cleanUrl}?siteId=${encodeURIComponent(siteId)}&endpoint=total&start=${totalStart}&end=${todayISO}`;
             const response = await fetch(apiUrl, {
               method: 'GET',
               mode: 'cors'
