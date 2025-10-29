@@ -249,6 +249,26 @@
             throw err;
           }
         };
+
+        // 총 방문자수 전용: /api/v0/stats/total 사용 (대용량 기간 502 회피)
+        const callGoatCounterTotal = async () => {
+          try {
+            const cleanUrl = lambdaUrl.replace(/\/$/, '');
+            const apiUrl = `${cleanUrl}?siteId=${encodeURIComponent(siteId)}&endpoint=total`;
+            const response = await fetch(apiUrl, {
+              method: 'GET',
+              mode: 'cors'
+            });
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`HTTP ${response.status}: ${errorText}`);
+            }
+            return await response.json();
+          } catch (err) {
+            console.warn('Visitor counter: 총 방문자수 total 엔드포인트 오류', err);
+            throw err;
+          }
+        };
         
         // 응답 파싱 헬퍼 함수
         const parseCount = (data) => {
@@ -306,7 +326,8 @@
         oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
         const oneYearAgoISO = oneYearAgo.toISOString().split('T')[0];
         
-        callGoatCounterAPI(oneYearAgoISO, todayISO, '총 방문자수')
+        // 우선 total 엔드포인트 시도 → 실패 시 기간 조회 폴백
+        callGoatCounterTotal()
           .then(data => {
             console.log('Visitor counter: 총 방문자수 API 응답:', data);
             const count = parseCount(data);
@@ -317,8 +338,21 @@
             }
           })
           .catch((err) => {
-            console.warn('Visitor counter: 총 방문자수 API 실패, 로컬 스토리지 값 사용', err.message);
-            // API 실패 시 로컬 스토리지 값 유지
+            console.warn('Visitor counter: total 엔드포인트 실패, 기간 조회로 폴백', err.message);
+            callGoatCounterAPI(oneYearAgoISO, todayISO, '총 방문자수(폴백)')
+              .then(data => {
+                console.log('Visitor counter: 총 방문자수(폴백) API 응답:', data);
+                const count = parseCount(data);
+                if (count >= 0) {
+                  totalEl.textContent = count.toLocaleString('ko-KR');
+                  localStorage.setItem('gc_total_visits', count.toString());
+                  console.log('Visitor counter: 총 방문자수(폴백) API 성공', count);
+                }
+              })
+              .catch((err2) => {
+                console.warn('Visitor counter: 총 방문자수 API 실패, 로컬 스토리지 값 사용', err2.message);
+                // 최종 폴백: 로컬 스토리지 값 유지
+              });
           });
       } else {
         // API 키 없음: 로컬 스토리지 값만 사용
