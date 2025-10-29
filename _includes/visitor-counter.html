@@ -1,6 +1,55 @@
 <!-- Visitor Counter Component - 사이드바 하단에 삽입 -->
 {% assign goatcounter_id = site.analytics.goatcounter.id | default: '' %}
-<script defer>
+<style>
+.visitor-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 8px 0;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--bs-body-color);
+  opacity: 0.8;
+  width: 100%;
+  text-align: center;
+}
+
+.visitor-counter .vc-label {
+  font-size: 11px;
+  color: var(--bs-text-muted);
+  font-weight: 500;
+}
+
+.visitor-counter .vc-number {
+  font-family: 'SFMono-Regular', 'Consolas', 'Courier New', monospace;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--bs-body-color);
+  min-width: 24px;
+  text-align: center;
+}
+
+.visitor-counter .vc-divider {
+  color: var(--bs-border-color);
+  margin: 0 2px;
+  font-size: 10px;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .visitor-counter {
+  color: var(--bs-body-color);
+}
+
+[data-theme="dark"] .visitor-counter .vc-label {
+  color: var(--bs-text-muted);
+}
+
+[data-theme="dark"] .visitor-counter .vc-number {
+  color: var(--bs-body-color);
+}
+</style>
+<script>
 (function() {
   let retryCount = 0;
   const maxRetries = 50;
@@ -89,7 +138,8 @@
     }
     
     // Liquid 변수에서 siteId 가져오기 (안전하게 처리)
-    var siteId = '{{ goatcounter_id | strip }}';
+    var siteId = '{{ goatcounter_id }}';
+    siteId = siteId ? siteId.trim() : '';
     const prodHost = 'wookja-0.github.io';
     const isProd = location.hostname.endsWith('github.io') || location.hostname === prodHost || location.hostname === 'wookja-0.github.io';
     
@@ -252,7 +302,7 @@
   const runWhenReady = () => {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', insertCounter);
-    } else {
+    } else if (document.readyState === 'interactive' || document.readyState === 'complete') {
       insertCounter();
     }
     // 추가 안전장치: DOM이 준비될 때까지 기다림
@@ -260,59 +310,16 @@
       if (!document.querySelector('.visitor-counter')) {
         insertCounter();
       }
-    }, 500);
+    }, 1000);
+    // window.onload 후에도 한번 더 시도
+    window.addEventListener('load', () => {
+      if (!document.querySelector('.visitor-counter')) {
+        insertCounter();
+      }
+    });
   };
   
+  // 즉시 실행 시도
   runWhenReady();
 })();
 </script>
-
-<style>
-.visitor-counter {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin: 8px 0;
-  padding: 6px 12px;
-  font-size: 12px;
-  color: var(--bs-body-color);
-  opacity: 0.8;
-  width: 100%;
-  text-align: center;
-}
-
-.visitor-counter .vc-label {
-  font-size: 11px;
-  color: var(--bs-text-muted);
-  font-weight: 500;
-}
-
-.visitor-counter .vc-number {
-  font-family: 'SFMono-Regular', 'Consolas', 'Courier New', monospace;
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--bs-body-color);
-  min-width: 24px;
-  text-align: center;
-}
-
-.visitor-counter .vc-divider {
-  color: var(--bs-border-color);
-  margin: 0 2px;
-  font-size: 10px;
-}
-
-/* Dark mode support */
-[data-theme="dark"] .visitor-counter {
-  color: var(--bs-body-color);
-}
-
-[data-theme="dark"] .visitor-counter .vc-label {
-  color: var(--bs-text-muted);
-}
-
-[data-theme="dark"] .visitor-counter .vc-number {
-  color: var(--bs-body-color);
-}
-</style>
