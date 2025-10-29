@@ -1,0 +1,244 @@
+<!-- Visitor Counter Component - 사이드바 하단에 삽입 -->
+<script>
+(function() {
+  // DOM이 완전히 로드된 후 실행
+  const insertCounter = () => {
+    // 이미 추가되었는지 확인
+    if (document.querySelector('.visitor-counter')) return;
+    
+    // 사이드바 하단 영역 찾기 (sidebar-bottom 또는 비슷한 요소)
+    const sidebar = document.querySelector('#sidebar');
+    const sidebarBottom = document.querySelector('.sidebar-bottom');
+    
+    if (!sidebar && !sidebarBottom) {
+      // 요소를 찾을 수 없으면 잠시 후 다시 시도
+      setTimeout(insertCounter, 100);
+      return;
+    }
+    
+    const counterHTML = `
+      <div class="visitor-counter">
+        <span class="vc-label">오늘</span>
+        <span id="visitor-today" class="vc-number">-</span>
+        <span class="vc-divider">|</span>
+        <span class="vc-label">어제</span>
+        <span id="visitor-yesterday" class="vc-number">-</span>
+        <span class="vc-divider">|</span>
+        <span class="vc-label">총</span>
+        <span id="visitor-total" class="vc-number">-</span>
+      </div>
+    `;
+    
+    const wrap = document.createElement('div');
+    wrap.innerHTML = counterHTML.trim();
+    const counterEl = wrap.firstElementChild;
+    
+    // sidebar-bottom이 있으면 그 앞에, 없으면 sidebar 맨 아래에
+    if (sidebarBottom) {
+      sidebarBottom.parentNode.insertBefore(counterEl, sidebarBottom);
+    } else if (sidebar) {
+      sidebar.appendChild(counterEl);
+    } else {
+      return;
+    }
+    
+    // 카운터 업데이트 함수 실행
+    updateVisitorCount();
+  };
+  
+  // 카운터 숫자 업데이트 (오늘/어제/총 방문자)
+  const updateVisitorCount = () => {
+    const todayEl = document.getElementById('visitor-today');
+    const yesterdayEl = document.getElementById('visitor-yesterday');
+    const totalEl = document.getElementById('visitor-total');
+    
+    if (!todayEl || !yesterdayEl || !totalEl) {
+      setTimeout(updateVisitorCount, 100);
+      return;
+    }
+    
+    const siteId = '{{ site.analytics.goatcounter.id }}';
+    const prodHost = 'wookja-0.github.io';
+    const isProd = location.hostname.endsWith('github.io') || location.hostname === prodHost;
+    
+    // 날짜 계산
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const todayStr = today.toDateString();
+    const yesterdayStr = yesterday.toDateString();
+    const todayISO = today.toISOString().split('T')[0];
+    const yesterdayISO = yesterday.toISOString().split('T')[0];
+    
+    // 로컬 스토리지에서 방문 기록 가져오기
+    const getDateVisits = (dateStr) => {
+      const key = `gc_visits_${dateStr}`;
+      return parseInt(localStorage.getItem(key) || '0');
+    };
+    
+    const setDateVisits = (dateStr, count) => {
+      const key = `gc_visits_${dateStr}`;
+      localStorage.setItem(key, count.toString());
+    };
+    
+    // 오늘 방문자수 계산 (로컬 스토리지 기반)
+    const lastVisitDate = localStorage.getItem('gc_last_visit_date');
+    let todayVisits = getDateVisits(todayStr);
+    let yesterdayVisits = getDateVisits(yesterdayStr);
+    let totalVisits = parseInt(localStorage.getItem('gc_total_visits') || '0');
+    
+    // 오늘 첫 방문이면 카운트 증가
+    if (lastVisitDate !== todayStr) {
+      // 어제가 바뀌었으면 어제 값을 저장
+      if (lastVisitDate && lastVisitDate !== todayStr && lastVisitDate !== yesterdayStr) {
+        const prevYesterday = getDateVisits(lastVisitDate);
+        setDateVisits(yesterdayStr, prevYesterday || todayVisits);
+      }
+      
+      todayVisits += 1;
+      totalVisits += 1;
+      setDateVisits(todayStr, todayVisits);
+      localStorage.setItem('gc_last_visit_date', todayStr);
+      localStorage.setItem('gc_total_visits', totalVisits.toString());
+      
+      // 어제 값이 없으면 저장된 어제 값을 가져오기
+      if (!yesterdayVisits && lastVisitDate === yesterdayStr) {
+        yesterdayVisits = getDateVisits(yesterdayStr);
+      }
+    }
+    
+    // 초기 표시 (로컬 스토리지 값)
+    todayEl.textContent = todayVisits.toLocaleString('ko-KR');
+    yesterdayEl.textContent = (yesterdayVisits || 0).toLocaleString('ko-KR');
+    totalEl.textContent = totalVisits.toLocaleString('ko-KR');
+    
+    // GoatCounter API로 실제 통계 가져오기 (배포 환경에서만)
+    if (isProd && siteId) {
+      // 오늘 통계
+      fetch(`https://${siteId}.goatcounter.com/api/v0/stats?start=${todayISO}&end=${todayISO}`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(response => response.ok ? response.json() : Promise.reject())
+        .then(data => {
+          if (data && data.total !== undefined) {
+            const count = parseInt(data.total) || 0;
+            todayEl.textContent = count.toLocaleString('ko-KR');
+            setDateVisits(todayStr, count);
+          }
+        })
+        .catch(() => { /* API 실패 시 로컬 스토리지 값 유지 */ });
+      
+      // 어제 통계
+      fetch(`https://${siteId}.goatcounter.com/api/v0/stats?start=${yesterdayISO}&end=${yesterdayISO}`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(response => response.ok ? response.json() : Promise.reject())
+        .then(data => {
+          if (data && data.total !== undefined) {
+            const count = parseInt(data.total) || 0;
+            yesterdayEl.textContent = count.toLocaleString('ko-KR');
+            setDateVisits(yesterdayStr, count);
+          }
+        })
+        .catch(() => { /* API 실패 시 로컬 스토리지 값 유지 */ });
+      
+      // 총 방문자수 (지난 1년 데이터 또는 전체 기간)
+      const oneYearAgo = new Date(today);
+      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+      const oneYearAgoISO = oneYearAgo.toISOString().split('T')[0];
+      
+      fetch(`https://${siteId}.goatcounter.com/api/v0/stats?start=${oneYearAgoISO}&end=${todayISO}`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(response => response.ok ? response.json() : Promise.reject())
+        .then(data => {
+          if (data && data.total !== undefined) {
+            const count = parseInt(data.total) || 0;
+            totalEl.textContent = count.toLocaleString('ko-KR');
+            localStorage.setItem('gc_total_visits', count.toString());
+          }
+        })
+        .catch(() => { /* API 실패 시 로컬 스토리지 값 유지 */ });
+    } else {
+      // 로컬 환경에서는 로컬 스토리지 값 사용
+      // 총 방문자수는 모든 날짜 합산
+      if (totalVisits === 0) {
+        // 초기값 설정 (로컬 테스트용)
+        const allKeys = Object.keys(localStorage);
+        let sum = 0;
+        allKeys.forEach(key => {
+          if (key.startsWith('gc_visits_')) {
+            sum += parseInt(localStorage.getItem(key) || '0');
+          }
+        });
+        if (sum > 0) {
+          totalVisits = sum;
+          localStorage.setItem('gc_total_visits', totalVisits.toString());
+          totalEl.textContent = totalVisits.toLocaleString('ko-KR');
+        }
+      }
+    }
+  };
+  
+  // 페이지 로드 완료 후 실행
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', insertCounter);
+  } else {
+    insertCounter();
+  }
+})();
+</script>
+
+<style>
+.visitor-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 8px 0;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--bs-body-color);
+  opacity: 0.8;
+  width: 100%;
+  text-align: center;
+}
+
+.visitor-counter .vc-label {
+  font-size: 11px;
+  color: var(--bs-text-muted);
+  font-weight: 500;
+}
+
+.visitor-counter .vc-number {
+  font-family: 'SFMono-Regular', 'Consolas', 'Courier New', monospace;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--bs-body-color);
+  min-width: 24px;
+  text-align: center;
+}
+
+.visitor-counter .vc-divider {
+  color: var(--bs-border-color);
+  margin: 0 2px;
+  font-size: 10px;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .visitor-counter {
+  color: var(--bs-body-color);
+}
+
+[data-theme="dark"] .visitor-counter .vc-label {
+  color: var(--bs-text-muted);
+}
+
+[data-theme="dark"] .visitor-counter .vc-number {
+  color: var(--bs-body-color);
+}
+</style>

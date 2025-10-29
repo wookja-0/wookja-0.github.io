@@ -128,4 +128,8 @@
   {% endif %}
 
   {% include metadata-hook.html %}
+  
+  {% if page.layout == 'home' %}
+    {% include visitor-counter.html %}
+  {% endif %}
 </head>
