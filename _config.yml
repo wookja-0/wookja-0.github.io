@@ -62,6 +62,7 @@ analytics:
     id: G-6T45ST30TH
   goatcounter:
     id: tkwk5445
+    api_key: 1fm8qc2qbrbeiny49vpuk4cy9ktj6nj0sohcsuc124v12vx0
   umami:
     id: # fill in your Umami ID
     domain: # fill in your Umami domain

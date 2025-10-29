@@ -134,14 +134,8 @@
     const prodHost = 'wookja-0.github.io';
     const isProd = location.hostname.endsWith('github.io') || location.hostname === prodHost || location.hostname === 'wookja-0.github.io';
     
-    // siteId 확인 및 경고
-    if (!siteId || siteId === '' || siteId.indexOf('{') !== -1 || siteId === 'undefined') {
-      console.warn('Visitor counter: GoatCounter siteId를 찾을 수 없습니다. 로컬 스토리지 값만 표시됩니다. siteId:', siteId, 'window.GOATCOUNTER_SITE_ID:', window.GOATCOUNTER_SITE_ID);
-      // siteId가 없어도 로컬 스토리지 값은 계속 표시하므로 에러로 중단하지 않음
-      siteId = ''; // 빈 문자열로 설정하여 API 호출하지 않음
-    } else {
-      console.log('Visitor counter: siteId 확인됨:', siteId);
-    }
+    // siteId는 GoatCounter 추적을 위한 것이며, 현재는 로컬 스토리지 기반 카운터를 사용합니다
+    // GoatCounter 추적은 자동으로 작동하며, 통계는 GoatCounter 대시보드에서 확인할 수 있습니다
     
     // 날짜 계산
     const today = new Date();
@@ -211,99 +205,155 @@
       }
     }
     
+    // GoatCounter API 호출 (공개 엔드포인트 시도)
+    // 참고: GoatCounter는 일반적으로 공개 API를 제공하지 않지만, 일부 엔드포인트는 접근 가능할 수 있습니다
     if (isProd && siteId && siteId !== '' && siteId.indexOf('{') === -1 && siteId !== 'undefined') {
-      // 오늘 통계
-      fetch(`https://${siteId}.goatcounter.com/api/v0/stats?start=${todayISO}&end=${todayISO}`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' },
-        mode: 'cors'
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (data && typeof data.total !== 'undefined') {
-            const count = parseInt(data.total) || 0;
-            todayEl.textContent = count.toLocaleString('ko-KR');
-            setDateVisits(todayStr, count);
-          }
-        })
-        .catch(err => {
-          console.warn('Visitor counter: 오늘 통계 API 오류', err);
-          // API 실패 시 로컬 스토리지 값 유지
-        });
+      // API 키 가져오기 (여러 소스에서 시도)
+      let apiKey = window.GOATCOUNTER_API_KEY || '';
       
-      // 어제 통계
-      fetch(`https://${siteId}.goatcounter.com/api/v0/stats?start=${yesterdayISO}&end=${yesterdayISO}`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' },
-        mode: 'cors'
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (data && typeof data.total !== 'undefined') {
-            const count = parseInt(data.total) || 0;
-            yesterdayEl.textContent = count.toLocaleString('ko-KR');
-            setDateVisits(yesterdayStr, count);
-          }
-        })
-        .catch(err => {
-          console.warn('Visitor counter: 어제 통계 API 오류', err);
-          // API 실패 시 로컬 스토리지 값 유지
-        });
-      
-      // 총 방문자수 (지난 1년 데이터)
-      const oneYearAgo = new Date(today);
-      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-      const oneYearAgoISO = oneYearAgo.toISOString().split('T')[0];
-      
-      fetch(`https://${siteId}.goatcounter.com/api/v0/stats?start=${oneYearAgoISO}&end=${todayISO}`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' },
-        mode: 'cors'
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (data && typeof data.total !== 'undefined') {
-            const count = parseInt(data.total) || 0;
-            totalEl.textContent = count.toLocaleString('ko-KR');
-            localStorage.setItem('gc_total_visits', count.toString());
-          }
-        })
-        .catch(err => {
-          console.warn('Visitor counter: 총 방문자수 API 오류', err);
-          // API 실패 시 로컬 스토리지 값 유지
-        });
-    } else {
-      // 로컬 환경에서는 로컬 스토리지 값 사용
-      // 총 방문자수는 모든 날짜 합산
-      if (totalVisits === 0) {
-        // 초기값 설정 (로컬 테스트용)
-        const allKeys = Object.keys(localStorage);
-        let sum = 0;
-        allKeys.forEach(key => {
-          if (key.startsWith('gc_visits_')) {
-            sum += parseInt(localStorage.getItem(key) || '0');
-          }
-        });
-        if (sum > 0) {
-          totalVisits = sum;
-          localStorage.setItem('gc_total_visits', totalVisits.toString());
-          totalEl.textContent = totalVisits.toLocaleString('ko-KR');
+      // meta 태그에서도 확인
+      if (!apiKey || apiKey === '' || apiKey === 'undefined') {
+        const apiKeyMeta = document.querySelector('meta[name="goatcounter-api-key"]');
+        if (apiKeyMeta && apiKeyMeta.content) {
+          apiKey = String(apiKeyMeta.content).trim();
+          window.GOATCOUNTER_API_KEY = apiKey; // 캐시
         }
+      }
+      
+      const hasApiKey = apiKey && apiKey !== '' && apiKey !== 'undefined';
+      
+      if (hasApiKey) {
+        console.log('Visitor counter: API 키 확인됨 (길이:', apiKey.length, ')');
+      }
+      
+      if (hasApiKey) {
+        // 인증된 API 호출 (API 키 사용)
+        // GoatCounter API는 Authorization 헤더에 Bearer 토큰 형식 사용
+        const headers = {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${apiKey}`  // Bearer 토큰 형식
+        };
+        
+        // API 호출 헬퍼 함수
+        const callGoatCounterAPI = async (startDate, endDate, label) => {
+          try {
+            const response = await fetch(`https://${siteId}.goatcounter.com/api/v0/stats?start=${startDate}&end=${endDate}`, {
+              method: 'GET',
+              headers: headers,
+              mode: 'cors'
+            });
+            
+            if (!response.ok) {
+              // Bearer 형식 실패 시 토큰만 직접 시도
+              if (response.status === 401) {
+                const altHeaders = {
+                  'Accept': 'application/json',
+                  'Authorization': apiKey  // Bearer 없이 직접 시도
+                };
+                const altResponse = await fetch(`https://${siteId}.goatcounter.com/api/v0/stats?start=${startDate}&end=${endDate}`, {
+                  method: 'GET',
+                  headers: altHeaders,
+                  mode: 'cors'
+                });
+                
+                if (!altResponse.ok) {
+                  throw new Error(`HTTP ${altResponse.status}`);
+                }
+                return await altResponse.json();
+              }
+              throw new Error(`HTTP ${response.status}`);
+            }
+            
+            return await response.json();
+          } catch (err) {
+            console.warn(`Visitor counter: ${label} API 오류`, err);
+            throw err;
+          }
+        };
+        
+        // 응답 파싱 헬퍼 함수
+        const parseCount = (data) => {
+          if (!data) return 0;
+          
+          // 다양한 응답 형식 지원
+          if (typeof data.total !== 'undefined') {
+            return parseInt(data.total) || 0;
+          } else if (data.stats && Array.isArray(data.stats)) {
+            // 배열 형식인 경우 합산
+            return data.stats.reduce((sum, stat) => sum + (parseInt(stat.count || stat.visitors || 0) || 0), 0);
+          } else if (data.visitors !== undefined) {
+            return parseInt(data.visitors) || 0;
+          } else if (typeof data === 'number') {
+            return parseInt(data);
+          }
+          return 0;
+        };
+        
+        // 오늘 통계
+        callGoatCounterAPI(todayISO, todayISO, '오늘 통계')
+          .then(data => {
+            console.log('Visitor counter: 오늘 통계 API 응답:', data);
+            const count = parseCount(data);
+            if (count > 0) {
+              todayEl.textContent = count.toLocaleString('ko-KR');
+              setDateVisits(todayStr, count);
+              console.log('Visitor counter: 오늘 통계 API 성공', count);
+            }
+          })
+          .catch(() => { /* 에러는 이미 로그됨 */ });
+        
+        // 어제 통계
+        callGoatCounterAPI(yesterdayISO, yesterdayISO, '어제 통계')
+          .then(data => {
+            console.log('Visitor counter: 어제 통계 API 응답:', data);
+            const count = parseCount(data);
+            if (count > 0) {
+              yesterdayEl.textContent = count.toLocaleString('ko-KR');
+              setDateVisits(yesterdayStr, count);
+              console.log('Visitor counter: 어제 통계 API 성공', count);
+            }
+          })
+          .catch(() => { /* 에러는 이미 로그됨 */ });
+        
+        // 총 방문자수 (지난 1년)
+        const oneYearAgo = new Date(today);
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+        const oneYearAgoISO = oneYearAgo.toISOString().split('T')[0];
+        
+        callGoatCounterAPI(oneYearAgoISO, todayISO, '총 방문자수')
+          .then(data => {
+            console.log('Visitor counter: 총 방문자수 API 응답:', data);
+            const count = parseCount(data);
+            if (count > 0) {
+              totalEl.textContent = count.toLocaleString('ko-KR');
+              localStorage.setItem('gc_total_visits', count.toString());
+              console.log('Visitor counter: 총 방문자수 API 성공', count);
+            }
+          })
+          .catch(() => { /* 에러는 이미 로그됨 */ });
+      } else {
+        // API 키 없음: 로컬 스토리지 값만 사용
+        console.log('Visitor counter: API 키가 없어 로컬 스토리지 값 사용');
+      }
+    }
+    
+    // 현재는 로컬 스토리지 기반 카운터를 기본으로 사용
+    // GoatCounter API는 대시보드에서 확인하거나, API 키가 있다면 추가 설정 가능
+    
+    // 총 방문자수는 모든 날짜 합산
+    if (totalVisits === 0) {
+      // 초기값 설정
+      const allKeys = Object.keys(localStorage);
+      let sum = 0;
+      allKeys.forEach(key => {
+        if (key.startsWith('gc_visits_')) {
+          sum += parseInt(localStorage.getItem(key) || '0');
+        }
+      });
+      if (sum > 0) {
+        totalVisits = sum;
+        localStorage.setItem('gc_total_visits', totalVisits.toString());
+        totalEl.textContent = totalVisits.toLocaleString('ko-KR');
       }
     }
   };
