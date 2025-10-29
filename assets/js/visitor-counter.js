@@ -105,23 +105,42 @@
       return;
     }
     
-    // GoatCounter siteId 가져오기 (전역 변수에서)
-    var siteId = window.GOATCOUNTER_SITE_ID || '';
-    siteId = siteId ? String(siteId).trim() : '';
+    // GoatCounter siteId 가져오기 (여러 소스에서 시도)
+    var siteId = '';
+    
+    // 방법 1: window.GOATCOUNTER_SITE_ID에서 읽기
+    if (typeof window !== 'undefined' && window.GOATCOUNTER_SITE_ID) {
+      siteId = String(window.GOATCOUNTER_SITE_ID).trim();
+    }
+    
+    // 방법 2: meta 태그에서 읽기
+    if (!siteId || siteId === '' || siteId === 'undefined') {
+      const metaTag = document.querySelector('meta[name="goatcounter-site-id"]');
+      if (metaTag && metaTag.content) {
+        siteId = String(metaTag.content).trim();
+      }
+    }
+    
+    // 방법 3: 다시 window에서 확인
+    if (!siteId || siteId === '' || siteId === 'undefined') {
+      setTimeout(() => {
+        if (window.GOATCOUNTER_SITE_ID) {
+          siteId = String(window.GOATCOUNTER_SITE_ID).trim();
+          console.log('Visitor counter: siteId를 나중에 찾음:', siteId);
+        }
+      }, 100);
+    }
+    
     const prodHost = 'wookja-0.github.io';
     const isProd = location.hostname.endsWith('github.io') || location.hostname === prodHost || location.hostname === 'wookja-0.github.io';
     
-    // siteId 확인 (디버깅용)
+    // siteId 확인 및 경고
     if (!siteId || siteId === '' || siteId.indexOf('{') !== -1 || siteId === 'undefined') {
-      // 재시도: window 객체에서 직접 읽기
-      if (typeof window !== 'undefined' && window.GOATCOUNTER_SITE_ID) {
-        siteId = String(window.GOATCOUNTER_SITE_ID).trim();
-      }
-      // 여전히 없으면 경고만 출력 (에러가 아니라 경고)
-      if (!siteId || siteId === '' || siteId.indexOf('{') !== -1 || siteId === 'undefined') {
-        console.warn('Visitor counter: GoatCounter siteId를 찾을 수 없습니다. 로컬 스토리지 값만 표시됩니다. siteId:', siteId, 'window.GOATCOUNTER_SITE_ID:', window.GOATCOUNTER_SITE_ID);
-        // siteId가 없어도 로컬 스토리지 값은 계속 표시하므로 에러로 중단하지 않음
-      }
+      console.warn('Visitor counter: GoatCounter siteId를 찾을 수 없습니다. 로컬 스토리지 값만 표시됩니다. siteId:', siteId, 'window.GOATCOUNTER_SITE_ID:', window.GOATCOUNTER_SITE_ID);
+      // siteId가 없어도 로컬 스토리지 값은 계속 표시하므로 에러로 중단하지 않음
+      siteId = ''; // 빈 문자열로 설정하여 API 호출하지 않음
+    } else {
+      console.log('Visitor counter: siteId 확인됨:', siteId);
     }
     
     // 날짜 계산
@@ -177,7 +196,22 @@
     totalEl.textContent = totalVisits.toLocaleString('ko-KR');
     
     // GoatCounter API로 실제 통계 가져오기 (배포 환경에서만)
-    if (isProd && siteId && siteId !== '' && siteId.indexOf('{') === -1) {
+    // siteId가 아직 설정되지 않았다면 다시 확인
+    if (!siteId || siteId === '' || siteId === 'undefined') {
+      // window에서 다시 확인
+      if (typeof window !== 'undefined' && window.GOATCOUNTER_SITE_ID) {
+        siteId = String(window.GOATCOUNTER_SITE_ID).trim();
+      }
+      // meta 태그에서 확인
+      if ((!siteId || siteId === '') && document) {
+        const metaTag = document.querySelector('meta[name="goatcounter-site-id"]');
+        if (metaTag && metaTag.content) {
+          siteId = String(metaTag.content).trim();
+        }
+      }
+    }
+    
+    if (isProd && siteId && siteId !== '' && siteId.indexOf('{') === -1 && siteId !== 'undefined') {
       // 오늘 통계
       fetch(`https://${siteId}.goatcounter.com/api/v0/stats?start=${todayISO}&end=${todayISO}`, {
         method: 'GET',

@@ -49,13 +49,17 @@
   color: var(--bs-body-color);
 }
 </style>
+{% if site.analytics.goatcounter.id %}
+<meta name="goatcounter-site-id" content="{{ site.analytics.goatcounter.id }}">
 <script>
 // GoatCounter siteId를 전역 변수로 설정 (HTML 압축 영향 없음)
-{% if site.analytics.goatcounter.id %}
-window.GOATCOUNTER_SITE_ID = '{{ site.analytics.goatcounter.id }}'.trim();
-{% else %}
-window.GOATCOUNTER_SITE_ID = '';
-{% endif %}
+window.GOATCOUNTER_SITE_ID = '{{ site.analytics.goatcounter.id }}';
 console.log('Visitor counter: GOATCOUNTER_SITE_ID 설정됨:', window.GOATCOUNTER_SITE_ID);
 </script>
+{% else %}
+<script>
+window.GOATCOUNTER_SITE_ID = '';
+console.warn('Visitor counter: GOATCounter siteId가 설정되지 않음');
+</script>
+{% endif %}
 <script src="{{ '/assets/js/visitor-counter.js' | relative_url }}"></script>
