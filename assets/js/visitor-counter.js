@@ -62,9 +62,6 @@
         <span class="vc-label">오늘</span>
         <span id="visitor-today" class="vc-number">-</span>
         <span class="vc-divider">|</span>
-        <span class="vc-label">어제</span>
-        <span id="visitor-yesterday" class="vc-number">-</span>
-        <span class="vc-divider">|</span>
         <span class="vc-label">총</span>
         <span id="visitor-total" class="vc-number">-</span>
       </div>
@@ -99,13 +96,12 @@
     }
   };
   
-  // 카운터 숫자 업데이트 (오늘/어제/총 방문자)
+  // 카운터 숫자 업데이트 (오늘/총 방문자)
   const updateVisitorCount = () => {
     const todayEl = document.getElementById('visitor-today');
-    const yesterdayEl = document.getElementById('visitor-yesterday');
     const totalEl = document.getElementById('visitor-total');
     
-    if (!todayEl || !yesterdayEl || !totalEl) {
+    if (!todayEl || !totalEl) {
       setTimeout(updateVisitorCount, 100);
       return;
     }
@@ -191,7 +187,6 @@
     
     // 초기 표시 (로컬 스토리지 값)
     todayEl.textContent = todayVisits.toLocaleString('ko-KR');
-    yesterdayEl.textContent = (yesterdayVisits || 0).toLocaleString('ko-KR');
     totalEl.textContent = totalVisits.toLocaleString('ko-KR');
     
     // GoatCounter API로 실제 통계 가져오기 (배포 환경에서만)
@@ -329,25 +324,7 @@
             // API 실패 시 로컬 스토리지 값 유지
           });
         
-        // 어제 통계
-        callGoatCounterAPI(yesterdayISO, yesterdayISO, '어제 통계')
-          .then(data => {
-            console.log('Visitor counter: 어제 통계 API 응답:', data);
-            const count = parseCount(data);
-            // 어제는 0도 유효. 단, 현재 값이 더 크면 유지
-            const current = parseInt((yesterdayEl.textContent || '0').replace(/[^0-9]/g, '')) || 0;
-            if (count >= current) {
-              yesterdayEl.textContent = count.toLocaleString('ko-KR');
-              setDateVisits(yesterdayStr, count);
-              console.log('Visitor counter: 어제 통계 API 성공', count);
-            } else {
-              console.log('Visitor counter: 어제 통계 API 값이 현재값보다 작아 유지', { api: count, current });
-            }
-          })
-          .catch((err) => {
-            console.warn('Visitor counter: 어제 통계 API 실패, 로컬 스토리지 값 사용', err.message);
-            // API 실패 시 로컬 스토리지 값 유지
-          });
+        // 어제 통계는 표시하지 않음
         
         // 총 방문자수 (지난 1년)
         const oneYearAgo = new Date(today);
