@@ -156,6 +156,8 @@ baseurl: ""
 
 plugins:
   - jekyll-linkpreview
+  - jekyll-sitemap
+  - jekyll-feed
 
 # ------------ The following options are not recommended to be modified ------------------
 
