@@ -4,6 +4,7 @@ date: 2025-11-24 00:00:00 +0900
 categories: ['Kubernetes', 'MCP']
 tags: ['kubernetes', 'mcp', 'naver-api', 'sse', 'deployment']
 description: "Naver Search MCP Server를 Kubernetes 클러스터에 배포하고, LangChain 등 MCP 클라이언트와 연동하는 방법을 정리해보자."
+image: /assets/images/2025-11-24/thumbnail.png
 ---
 
 안녕하세요. 이번 포스팅에서는 Naver Search MCP Server를 Kubernetes 환경에 배포하는 방법을 정리해보려 합니다.
