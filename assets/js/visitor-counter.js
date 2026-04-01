@@ -133,7 +133,7 @@
     }
     
     const prodHost = 'wookja-0.github.io';
-    const isProd = location.hostname.endsWith('github.io') || location.hostname === prodHost || location.hostname === 'wookja-0.github.io';
+    const isProd = location.hostname.endsWith('github.io') || location.hostname === prodHost || location.hostname === 'wookja-0.github.io' || location.hostname === 'blog.wookjin.cloud';
     
     // siteId는 GoatCounter 추적을 위한 것이며, 현재는 로컬 스토리지 기반 카운터를 사용합니다
     // GoatCounter 추적은 자동으로 작동하며, 통계는 GoatCounter 대시보드에서 확인할 수 있습니다
