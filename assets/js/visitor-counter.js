@@ -89,17 +89,22 @@
 
     if (!siteId || !lambdaUrl) return;
 
-    const toISO = (d) => d.toISOString().split('T')[0];
+    // KST(UTC+9) 기준 날짜 계산
+    const toKSTISO = (d) => {
+      const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+      return kst.toISOString().split('T')[0];
+    };
     const now = new Date();
-    const todayISO = toISO(now);
+    const todayISO = toKSTISO(now);
 
     const weekStart = new Date(now);
     weekStart.setDate(now.getDate() - 6);
-    const weekStartISO = toISO(weekStart);
+    const weekStartISO = toKSTISO(weekStart);
 
     const monthStart = new Date(now);
     monthStart.setDate(1);
-    const monthStartISO = toISO(monthStart);
+    monthStart.setHours(0, 0, 0, 0);
+    const monthStartISO = toKSTISO(monthStart);
 
     const cleanUrl = lambdaUrl.replace(/\/$/, '');
 
