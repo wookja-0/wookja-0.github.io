@@ -88,8 +88,8 @@
     const todayISO = new Date().toISOString().split('T')[0];
     const cleanUrl = lambdaUrl.replace(/\/$/, '');
 
-    // 오늘 방문자
-    fetch(`${cleanUrl}?siteId=${encodeURIComponent(siteId)}&start=${todayISO}&end=${todayISO}`, { mode: 'cors' })
+    // 오늘 방문자 (stats/total + 오늘 날짜 = unique visitor)
+    fetch(`${cleanUrl}?siteId=${encodeURIComponent(siteId)}&endpoint=total&start=${todayISO}&end=${todayISO}`, { mode: 'cors' })
       .then(r => r.json())
       .then(data => {
         const count = parseInt(data.total) || 0;
@@ -97,7 +97,7 @@
       })
       .catch(() => { todayEl.textContent = '-'; });
 
-    // 총 방문자
+    // 총 방문자 (stats/total, 기간 없음 = 전체 누적 unique visitor)
     fetch(`${cleanUrl}?siteId=${encodeURIComponent(siteId)}&endpoint=total`, { mode: 'cors' })
       .then(r => r.json())
       .then(data => {
