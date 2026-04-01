@@ -1,0 +1,8 @@
+name: Kubernetes
+thumbnail:
+  path: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Kubernetes_logo_without_workmark.svg/1200px-Kubernetes_logo_without_workmark.svg.png"
+  alt: "Kubernetes"
+description: |
+  ### Kubernetes
+
+  컨테이너 오케스트레이션 플랫폼 Kubernetes를 활용한 클러스터 구성, 배포, 운영 경험을 정리합니다.

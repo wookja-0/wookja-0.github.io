@@ -1,0 +1,8 @@
+name: OpenStack
+thumbnail:
+  path: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/OpenStack%C2%AE_Logo_2016.svg/1200px-OpenStack%C2%AE_Logo_2016.svg.png"
+  alt: "OpenStack"
+description: |
+  ### OpenStack
+
+  오픈소스 클라우드 플랫폼 OpenStack 구축 및 운영 경험을 정리합니다.

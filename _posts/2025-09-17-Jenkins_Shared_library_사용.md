@@ -4,7 +4,7 @@ date: 2025-09-17
 categories: [DevOps, CI/CD]
 tags: [jenkins, shared-library, pipeline, groovy, ci/cd]
 description: Jenkins Shared Library를 활용해 파이프라인 코드 중복을 줄이고, 효율적으로 DevOps 자동화를 구현하는 방법.
-image: /assets/images/2025-09-17/jenkins-shared-lib.png
+image: /assets/images/2025-09-17/jenkins-shared-lib.webp
 ---
 
 이번 글에서는 Jenkins의 Shared Library 기능을 활용해 파이프라인 코드의 중복을 줄이고, 효율적으로 DevOps 자동화를 구현하는 방법을 정리해보려 합니다.
@@ -16,7 +16,7 @@ image: /assets/images/2025-09-17/jenkins-shared-lib.png
 
 아래는 실제 프로젝트에 적용한 아키텍처 다이어그램입니다.  
 
-![아키텍처 사례](/assets/images/2025-09-17/arch.png)
+![아키텍처 사례](/assets/images/2025-09-17/arch.webp)
 > 해당 다이어그램은 [LucidChart](https://www.lucidchart.com/) 를 사용해 작성하였습니다.
 
 
@@ -25,7 +25,7 @@ image: /assets/images/2025-09-17/jenkins-shared-lib.png
 
 ## 적용할 GitOps 기반 CI/CD 파이프라인 Flow
 
-![파이프라인](/assets/images/2025-09-17/gitops.png)
+![파이프라인](/assets/images/2025-09-17/gitops.webp)
 
 | 단계 | 주요 내용 |
 |---|-------------------------------------------------------------|
@@ -63,7 +63,7 @@ image: /assets/images/2025-09-17/jenkins-shared-lib.png
 Shared Library는 보통 별도의 Git 저장소로 관리하며, Jenkinsfile에서 `@Library` 어노테이션으로 불러와 사용합니다.
 
 구조:
-![디렉토리 구조](/assets/images/2025-09-17/directory.png)
+![디렉토리 구조](/assets/images/2025-09-17/directory.webp)
 
 
 - **vars/**: 전역으로 사용할 수 있는 Groovy 스크립트(함수, 파이프라인 스텝)
@@ -95,9 +95,9 @@ Jenkins에서 Shared Library를 사용하려면 아래와 같이 설정합니다
 1. **Jenkins 관리 > Configure System(시스템 설정) > Global Shared Libraries**
 	- `Library name`에 사용할 이름(예: `jenkins-shared-lib`)을 입력합니다.
 	- `Default version`에는 브랜치명(예: `main` 또는 `master`)을 입력합니다.
-  ![설정1](/assets/images/2025-09-17/setting1.png)
+  ![설정1](/assets/images/2025-09-17/setting1.webp)
 	- `Retrieval method`는 `Modern SCM` 선택 후, 실제 shared library 코드를 관리/적용 할 Git 저장소 URL과 인증 정보를 입력합니다.
-  ![설정2](/assets/images/2025-09-17/setting2.png)
+  ![설정2](/assets/images/2025-09-17/setting2.webp)
 
 2. **Jenkinsfile에서 Shared Library 사용**
 	- Jenkinsfile 상단에 아래와 같이 선언합니다.
@@ -298,7 +298,7 @@ pipeline {
 ```
 
 ## 빌드 성공 시 Pipeline 내역
-![pipeline](/assets/images/2025-09-17/pipeline.png)
+![pipeline](/assets/images/2025-09-17/pipeline.webp)
 
 
 ---

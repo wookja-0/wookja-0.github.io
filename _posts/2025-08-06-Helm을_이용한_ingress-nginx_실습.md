@@ -4,7 +4,7 @@ date: 2025-08-06 00:00:00 +0900
 categories: ['Kubernetes']
 tags: ['helm', 'ingress-nginx', 'kubernetes']
 description: "Helm Chart로 Ingress-NGINX를 설치하고 경로기반 라우팅을 구성 해보자."
-image: assets/images/2025-08-06/nginx-ingress-1.png
+image: assets/images/2025-08-06/nginx-ingress-1.webp
 ---
 
 안녕하세요. 이번 포스팅에서는 Kubernetes 환경에서 Helm을 활용해 Ingress-NGINX를 설치하고, 실제로 간단한 서비스 라우팅을 실습하는 방법을 정리 해보려합니다.
@@ -13,7 +13,7 @@ image: assets/images/2025-08-06/nginx-ingress-1.png
 ## 1. Ingress-NGINX란?
 
 
-![nginx-ingress](assets/images/2025-08-06/nginx-ingress.png)
+![nginx-ingress](assets/images/2025-08-06/nginx-ingress.webp)
 
 Ingress-NGINX는 Kubernetes에서 가장 널리 사용되는 Ingress Controller 중 하나로, 외부 트래픽을 클러스터 내부 서비스로 라우팅해주는 역할을 합니다.
 
@@ -30,7 +30,7 @@ Ingress-NGINX는 다양한 라우팅 규칙, TLS, 인증, 리다이렉트 등 �
 ---
 ## 2. Helm Chart로 Ingress-NGINX 설치
 
-![helm](assets/images/2025-08-06/helm.png)
+![helm](assets/images/2025-08-06/helm.webp)
 
 Helm은 Kubernetes에서 애플리케이션을 쉽고 일관되게 배포·관리할 수 있도록 도와주는 패키지 매니저입니다. 복잡한 리소스(Deployment, Service, ConfigMap 등)를 하나의 Chart로 묶어버릴 수 있어, 반복적인 배포나 환경별 설정 관리에 매우 유용합니다.
 
@@ -245,7 +245,7 @@ http://192.168.0.162:30080/echo1
 
 접속하면 echo1 서버의 응답을 확인할 수 있습니다.
 
-![echo1](assets/images/2025-08-06/echo1.png)
+![echo1](assets/images/2025-08-06/echo1.webp)
 
 또는
 
@@ -255,7 +255,7 @@ http://192.168.0.162:30080/echo2
 
 접속하면 echo2 서버의 응답을 확인할 수 있습니다.
 
-![echo2](assets/images/2025-08-06/echo2.png)
+![echo2](assets/images/2025-08-06/echo2.webp)
 
 
 응답 예시 (echo2):

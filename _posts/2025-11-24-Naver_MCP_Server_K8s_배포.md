@@ -4,7 +4,7 @@ date: 2025-11-24 00:00:00 +0900
 categories: ['Kubernetes', 'MCP']
 tags: ['kubernetes', 'mcp', 'naver-api', 'sse', 'deployment']
 description: "Naver Search MCP Server를 Kubernetes 클러스터에 배포하고, LangChain 등 MCP 클라이언트와 연동하는 방법을 정리해보자."
-image: /assets/images/2025-11-24/thumbnail.png
+image: /assets/images/2025-11-24/thumbnail.webp
 ---
 
 안녕하세요. 이번 포스팅에서는 Naver Search MCP Server를 Kubernetes 환경에 배포하는 방법을 정리해보려 합니다.
@@ -17,7 +17,7 @@ Naver Search MCP Server는 Naver 검색 및 DataLab Open API를 MCP(Server-Sent 
 
 PoC 프로젝트에서 온톨로지 기반 AI 서비스를 구축하는 과정에서, 초기에는 [Smithery](https://smithery.ai/server/@isnow890/naver-search-mcp)에서 제공하는 Naver Search MCP Server를 사용했습니다.
 
-![아키텍처](/assets/images/2025-11-24/arch.png)
+![아키텍처](/assets/images/2025-11-24/arch.webp)
 
 하지만 Smithery의 공용 서버를 여러 사용자가 함께 사용하다 보니, 백엔드 클라이언트에서 Naver MCP Server로 요청 시 **502 Bad Gateway 에러가 빈번하게 발생**하는 문제가 있었습니다. 이는 공용 API의 부하와 리소스 경합 때문으로 보였으며, 안정적인 서비스 운영을 위해서는 자체 인프라 구축이 필요하다고 판단했습니다.
 
@@ -29,7 +29,7 @@ PoC 프로젝트에서 온톨로지 기반 AI 서비스를 구축하는 과정�
 
 **MCP(Model Context Protocol)**는 AI 애플리케이션이 외부 데이터 소스, 도구, 서비스와 상호작용할 수 있도록 하는 오픈 프로토콜입니다. MCP를 통해 AI 모델은 실시간으로 검색, 데이터베이스 조회, API 호출 등의 작업을 수행할 수 있습니다.
 
-![MCP 아키텍처](/assets/images/2025-11-24/mcp.png)
+![MCP 아키텍처](/assets/images/2025-11-24/mcp.webp)
 
 주요 특징:
 - **표준화된 프로토콜**: 다양한 AI 클라이언트와 서버 간의 일관된 통신 방식 제공
@@ -44,7 +44,7 @@ MCP 서버는 특정 기능(예: 검색, 데이터 분석, 파일 조작 등)을
 ---
 
 ## Naver MCP Server란?
-![Naver Search MCP](/assets/images/2025-11-24/naver-search.png)
+![Naver Search MCP](/assets/images/2025-11-24/naver-search.webp)
 
 **Naver Search MCP Server**는 Naver 검색 및 DataLab Open API를 MCP(Server-Sent Events) 프로토콜로 중계하는 단일 컨테이너 서비스입니다. 하나의 Dockerfile로 빌드 및 실행할 수 있으며, `NAVER_API_BASE_URL` 환경 변수만으로 Naver API 또는 프록시를 지정할 수 있습니다.
 
@@ -139,7 +139,7 @@ Naver API 인증 정보는 Secret으로 관리합니다.
 
 #### Naver API 키 발급
 Naver API 키는 [Naver Developers](https://developers.naver.com/apps/#/list)에서 발급받을 수 있습니다.
-![Naver Developers](/assets/images/2025-11-24/naver-developers.png)
+![Naver Developers](/assets/images/2025-11-24/naver-developers.webp)
 1. [Naver Developers](https://developers.naver.com/apps/#/list)에 접속하여 로그인합니다.
 2. "애플리케이션 등록"을 클릭하여 새 애플리케이션을 생성합니다.
 3. 필요한 API 서비스를 선택합니다 (검색 API, DataLab API 등).
@@ -294,7 +294,7 @@ kubectl logs -l app=naver-mcp-server --tail=50
 
 정상적으로 배포가 되었다면, 클라이언트에서 요청을 보낼 때 아래 로그 예시처럼 확인하실 수 있습니다.
 
-![Kibana 로그 대시보드](/assets/images/2025-11-24/kibana.png)
+![Kibana 로그 대시보드](/assets/images/2025-11-24/kibana.webp)
 
 로그에서 확인할 수 있는 주요 내용:
 - **SSE 연결 성공**: `GET /sse HTTP/1.1" 200 OK` - Server-Sent Events 연결이 정상적으로 이루어지고 있음을 확인

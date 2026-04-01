@@ -1,0 +1,8 @@
+name: Certification
+thumbnail:
+  path: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Kubernetes_logo_without_workmark.svg/1200px-Kubernetes_logo_without_workmark.svg.png"
+  alt: "Certification"
+description: |
+  ### Certification
+
+  CKA, NCE 등 클라우드/인프라 관련 자격증 취득 후기를 정리합니다.

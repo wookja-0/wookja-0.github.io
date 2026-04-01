@@ -14,12 +14,14 @@ layout: page
 
 
 
-    {% assign tag = site.data.tags[page.title] %}
+    {% assign tag_key = page.title | downcase %}
+    {% assign tag = site.data.tags[tag_key] %}
     {% if tag %}
         <div class="tag-info py-1 px-3">
         {% if tag.thumbnail %}
             <div class="mt-3 mb-3">
-                <img class="preview-img" src="{{ tag.thumbnail.path }}" alt="{{ tag.thumbnail.alt }} Thumbnail">
+                <img src="{{ tag.thumbnail.path }}" alt="{{ tag.thumbnail.alt }} Thumbnail"
+                     style="width:120px; height:120px; object-fit:contain; display:block;">
             </div>
         {% endif %}
         {% if tag.description %}

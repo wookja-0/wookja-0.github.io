@@ -4,7 +4,7 @@ date: 2026-03-31 00:00:00 +0900
 categories: ['Kubernetes', 'DevOps']
 tags: ['kubernetes', 'helm', 'argocd', 'jenkins', 'gitops', 'migration']
 description: "운영 중인 K8s 리소스를 서비스 다운타임 없이 Helm Chart로 전환하고, ArgoCD Application과 Jenkins CI/CD 파이프라인까지 함께 마이그레이션한 과정을 정리합니다."
-image: assets/images/2026-03-31/260331_thumbnail.png
+image: assets/images/2026-03-31/260331_thumbnail.webp
 ---
 
 이번 글에서는 기존에 raw YAML + ArgoCD 조합으로 운영하던 Kubernetes 리소스들을 Helm Chart 기반으로 전환한 경험을 정리해보려 합니다. ArgoCD Application 구조 변경부터 Jenkins 파이프라인 수정까지, 실제로 작업하면서 겪었던 시행착오 위주로 다뤄보겠습니다.
@@ -15,7 +15,7 @@ image: assets/images/2026-03-31/260331_thumbnail.png
 
 ## 1. 배경
 
-![배경](/assets/images/2026-03-31/260331_배경.png)
+![배경](/assets/images/2026-03-31/260331_배경.webp)
 
 부서에서 DevOps를 담당하는 사람이 저 혼자다 보니, K8s manifest 작성부터 배포까지 쭉 혼자 진행해왔습니다. 서비스별로 `deployment.yaml`, `service.yaml`, `pvc.yaml` 같은 파일들을 각각 폴더에 나누고, ArgoCD Application도 서비스마다 하나씩 만들어서 쓰고 있었습니다.
 
@@ -542,7 +542,7 @@ def keys = helmValuesKey.split('\\.').findAll { it }
 **삽질 1 — Groovy 파서가 백슬래시를 먹음:**  
 `sh """..."""` 블록 안에 `\s`, `\.` 같은 정규식을 넣으면, Groovy 컴파일러가 이걸 먼저 해석하면서 `unexpected char: '\'` 에러가 납니다. `sh '''...'''`로 바꿔도 Python 코드 안에 또 백슬래시가 있으면 똑같이 터집니다.
 
-![Groovy 파서 백슬래시 에러](/assets/images/2026-03-31/sap_1.png)
+![Groovy 파서 백슬래시 에러](/assets/images/2026-03-31/sap_1.webp)
 
 > 참고: [Jenkins — Pipeline Groovy string interpolation & escaping](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#string-interpolation)
 
@@ -657,21 +657,21 @@ qdrant   dmp-poc    1         deployed  qdrant-1.16.0
 
 **Before** — 서비스별로 Application이 나열된 ArgoCD 대시보드:
 
-![ArgoCD Before](/assets/images/2026-03-31/argo_before.png)
+![ArgoCD Before](/assets/images/2026-03-31/argo_before.webp)
 
 Helm 전환 후에는 네임스페이스 단위로 하나의 Application이 해당 네임스페이스의 모든 리소스를 트리 구조로 관리하게 됩니다.
 
 **After** — `dmp`, `dmp-poc` 2개의 Application으로 통합:
 
-![ArgoCD After](/assets/images/2026-03-31/argo_after.png)
+![ArgoCD After](/assets/images/2026-03-31/argo_after.webp)
 
 **dmp 네임스페이스** — 하나의 `dmp` Application에서 10개 서비스의 Deployment, Service, PVC, Ingress 전체를 관리:
 
-![ArgoCD dmp Application](/assets/images/2026-03-31/argo_dmp.png)
+![ArgoCD dmp Application](/assets/images/2026-03-31/argo_dmp.webp)
 
 **dmp-poc 네임스페이스** — 하나의 `dmp-poc` Application에서 8개 서비스를 통합 관리:
 
-![ArgoCD dmp-poc Application](/assets/images/2026-03-31/argo_dmppoc.png)
+![ArgoCD dmp-poc Application](/assets/images/2026-03-31/argo_dmppoc.webp)
 
 ArgoCD 대시보드에서 한눈에 네임스페이스 전체 상태를 볼 수 있게 되었고, 리소스 간 관계도 트리로 파악할 수 있어서 운영 편의성이 확실히 좋아졌습니다.
 
@@ -693,7 +693,7 @@ git push (앱 소스 레포)
 
 배포가 완료되면 Slack으로 결과 알림이 옵니다.
 
-![Slack 배포 결과 알림](/assets/images/2026-03-31/deploy_slack_result.png)
+![Slack 배포 결과 알림](/assets/images/2026-03-31/deploy_slack_result.webp)
 
 ---
 

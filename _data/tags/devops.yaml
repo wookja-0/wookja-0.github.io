@@ -1,0 +1,8 @@
+name: DevOps
+thumbnail:
+  path: "https://upload.wikimedia.org/wikipedia/commons/0/05/Devops-toolchain.svg"
+  alt: "DevOps"
+description: |
+  ### DevOps
+
+  CI/CD 파이프라인, 자동화, 인프라 관리 등 DevOps 엔지니어링 경험을 정리합니다.

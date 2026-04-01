@@ -4,7 +4,7 @@ date: 2025-08-01
 categories: ['OpenStack']
 tags: ['kolla-ansible', 'openstack', 'ubuntu', 'network']
 description: "Kolla-Ansible을 사용하여 OpenStack을 배포해보자"
-image: /assets/images/2025-08-01/thumbnail.png
+image: /assets/images/2025-08-01/thumbnail.webp
 ---
 
 
@@ -20,7 +20,7 @@ image: /assets/images/2025-08-01/thumbnail.png
 
 ---
 ## 1. 오픈스택이란?
-![](/assets/images/2025-08-01/openstack_icon.png)
+![](/assets/images/2025-08-01/openstack_icon.webp)
 
 **[OpenStack](https://docs.openstack.org/)**은 퍼블릭 및 프라이빗 클라우드를 위한 오픈소스 인프라 플랫폼입니다. IaaS(Infra as a Service) 구조로, 가상 서버를 빠르게 생성하고 네트워크, 스토리지, 인증 등 인프라 자원을 자동화하여 클라우드 환경을 구축할 수 있습니다.
 
@@ -40,7 +40,7 @@ OpenStack의 네트워크 구조는 크게 Provider 네트워크와 Self-Service
 
 OpenStack은 여러 컴포넌트(오브젝트)로 구성되어 있으며, 각 컴포넌트가 역할을 분담해 전체 인프라를 관리합니다. 주요 오브젝트는 다음과 같습니다:
 
-![](/assets/images/2025-08-01/openstack_arch.png)
+![](/assets/images/2025-08-01/openstack_arch.webp)
 
 - **[Nova](https://docs.openstack.org/nova/latest/)**: 컴퓨트(가상 서버) 관리. VM 생성/삭제/스케줄링 등 핵심 역할을 담당합니다.
 - **[Neutron](https://docs.openstack.org/neutron/latest/)**: 네트워크 관리. 가상 네트워크, 라우터, 서브넷, Floating IP 등 네트워크 자원과 연결을 제공합니다.
@@ -58,7 +58,7 @@ OpenStack은 여러 컴포넌트(오브젝트)로 구성되어 있으며, 각 �
 
 ---
 ## 2. Kolla-Ansible이란?
-![](/assets/images/2025-08-01/kolla-ansible_icon.png)
+![](/assets/images/2025-08-01/kolla-ansible_icon.webp)
 
 **[Kolla-Ansible](https://docs.openstack.org/kolla-ansible/latest/)**은 OpenStack을 컨테이너 기반으로 쉽고 빠르게 설치·운영할 수 있도록 도와주는 오픈소스 툴입니다. 기존 OpenStack 설치는 복잡한 패키지 의존성과 설정 파일 관리가 필요했지만, Kolla-Ansible은 모든 OpenStack 서비스를 **[Docker](https://docs.docker.com/)** 컨테이너로 배포해 관리 복잡도를 크게 줄여줍니다.
 
@@ -141,7 +141,7 @@ OpenStack은 여러 컴포넌트(오브젝트)로 구성되어 있으며, 각 �
 
 네트워크 노드를 별도로 분리 하였으면 좋았겠지만, 구비 된 서버가 2대 뿐이어서 네트워크 처리는 전부 controller node에서 처리되도록 구성하였습니다.
 
-![최종 아키텍처](/assets/images/2025-08-01/architecture.png)
+![최종 아키텍처](/assets/images/2025-08-01/architecture.webp)
 
 
 | **VM 이름**    | **역할**     | **IP 주소 (Self-Service)** | **Floating IP**    |
@@ -338,7 +338,7 @@ source /etc/kolla/admin-openrc.sh                                 # OpenStack CL
 
 ---
 ## 11. Horizon 접속
-![](/assets/images/2025-08-01/horizon.png)
+![](/assets/images/2025-08-01/horizon.webp)
 
 `post-deploy` 작업을 완료하면 `/etc/kolla/admin-openrc.sh`와 `clouds.yaml` 파일이 생성됩니다. `clouds.yaml`에는 아래와 같이 kolla-admin 계정 정보가 포함되어 있습니다.
 
@@ -472,7 +472,7 @@ openstack server add floating ip test-vm <FLOATING_IP>
 ### 6) 네트워크 토폴로지 확인
 
 네트워크와 VM을 생성 한 후 최종적으로 네트워크 토폴로지를 확인 합니다.
-![](/assets/images/2025-08-01/topology.png)
+![](/assets/images/2025-08-01/topology.webp)
 
 ---
 ## 16. SSH 접속
