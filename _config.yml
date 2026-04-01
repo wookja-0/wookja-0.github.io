@@ -59,7 +59,7 @@ webmaster_verifications:
 # Web Analytics Settings
 analytics:
   google:
-    id: G-6T45ST30TH
+    id: G-3K96CWBXQ6
   goatcounter:
     id: tkwk5445
     # API 키는 Lambda 환경 변수에 설정 (클라이언트 노출 방지)
