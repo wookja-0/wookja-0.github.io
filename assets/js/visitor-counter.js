@@ -32,12 +32,15 @@
     const counterHTML = `
       <div class="visitor-counter">
         <span class="vc-icon" aria-hidden="true">👥</span>
-        <span class="vc-badge" title="pageviews">방문자</span>
+        <span class="vc-badge">방문자</span>
         <span class="vc-label">오늘</span>
         <span id="visitor-today" class="vc-number">-</span>
         <span class="vc-divider">|</span>
-        <span class="vc-label">총</span>
-        <span id="visitor-total" class="vc-number">-</span>
+        <span class="vc-label">주간</span>
+        <span id="visitor-week" class="vc-number">-</span>
+        <span class="vc-divider">|</span>
+        <span class="vc-label">월간</span>
+        <span id="visitor-month" class="vc-number">-</span>
       </div>
     `;
 
@@ -63,8 +66,9 @@
 
   const updateVisitorCount = () => {
     const todayEl = document.getElementById('visitor-today');
-    const totalEl = document.getElementById('visitor-total');
-    if (!todayEl || !totalEl) {
+    const weekEl = document.getElementById('visitor-week');
+    const monthEl = document.getElementById('visitor-month');
+    if (!todayEl || !weekEl || !monthEl) {
       setTimeout(updateVisitorCount, 100);
       return;
     }
@@ -85,26 +89,30 @@
 
     if (!siteId || !lambdaUrl) return;
 
-    const todayISO = new Date().toISOString().split('T')[0];
+    const toISO = (d) => d.toISOString().split('T')[0];
+    const now = new Date();
+    const todayISO = toISO(now);
+
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - 6);
+    const weekStartISO = toISO(weekStart);
+
+    const monthStart = new Date(now);
+    monthStart.setDate(1);
+    const monthStartISO = toISO(monthStart);
+
     const cleanUrl = lambdaUrl.replace(/\/$/, '');
 
-    // 오늘 방문자 (stats/total + 오늘 날짜 = unique visitor)
-    fetch(`${cleanUrl}?siteId=${encodeURIComponent(siteId)}&endpoint=total&start=${todayISO}&end=${todayISO}`, { mode: 'cors' })
-      .then(r => r.json())
-      .then(data => {
-        const count = parseInt(data.total) || 0;
-        todayEl.textContent = count.toLocaleString('ko-KR');
-      })
-      .catch(() => { todayEl.textContent = '-'; });
+    const fetchCount = (start, end, el) => {
+      fetch(`${cleanUrl}?siteId=${encodeURIComponent(siteId)}&endpoint=total&start=${start}&end=${end}`, { mode: 'cors' })
+        .then(r => r.json())
+        .then(data => { el.textContent = (parseInt(data.total) || 0).toLocaleString('ko-KR'); })
+        .catch(() => { el.textContent = '-'; });
+    };
 
-    // 총 방문자 (stats/total, 기간 없음 = 전체 누적 unique visitor)
-    fetch(`${cleanUrl}?siteId=${encodeURIComponent(siteId)}&endpoint=total`, { mode: 'cors' })
-      .then(r => r.json())
-      .then(data => {
-        const count = parseInt(data.total) || 0;
-        totalEl.textContent = count.toLocaleString('ko-KR');
-      })
-      .catch(() => { totalEl.textContent = '-'; });
+    fetchCount(todayISO, todayISO, todayEl);
+    fetchCount(weekStartISO, todayISO, weekEl);
+    fetchCount(monthStartISO, todayISO, monthEl);
   };
 
   const runWhenReady = () => {
