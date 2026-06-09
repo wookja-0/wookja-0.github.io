@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="380" viewBox="0 0 900 380" font-family="'Segoe UI','Apple SD Gothic Neo',sans-serif">
+  <rect width="900" height="380" fill="#ffffff"/>
+  <text x="450" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#1e293b">Canary vs Blue/Green</text>
+
+  <!-- Canary column -->
+  <g transform="translate(40,70)">
+    <rect width="390" height="280" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="195" y="34" text-anchor="middle" font-size="17" font-weight="700" fill="#2563eb">Canary</text>
+    <text x="195" y="56" text-anchor="middle" font-size="12" fill="#64748b">트래픽을 점진적으로 이동</text>
+
+    <!-- gradual bars -->
+    <g transform="translate(45,80)">
+      <text x="0" y="14" font-size="11" fill="#64748b">10%</text>
+      <rect x="40" y="2" width="252" height="16" rx="3" fill="#dbeafe"/>
+      <rect x="40" y="2" width="25" height="16" rx="3" fill="#ef4444"/>
+      <text x="0" y="44" font-size="11" fill="#64748b">30%</text>
+      <rect x="40" y="32" width="252" height="16" rx="3" fill="#dbeafe"/>
+      <rect x="40" y="32" width="76" height="16" rx="3" fill="#ef4444"/>
+      <text x="0" y="74" font-size="11" fill="#64748b">60%</text>
+      <rect x="40" y="62" width="252" height="16" rx="3" fill="#dbeafe"/>
+      <rect x="40" y="62" width="151" height="16" rx="3" fill="#ef4444"/>
+      <text x="0" y="104" font-size="11" fill="#64748b">100%</text>
+      <rect x="40" y="92" width="252" height="16" rx="3" fill="#ef4444"/>
+    </g>
+    <text x="195" y="232" text-anchor="middle" font-size="11" fill="#475569">Pod 최소 추가 · 단계별 검증</text>
+    <text x="195" y="254" text-anchor="middle" font-size="11" fill="#475569">전환 느림 · 점진 롤백</text>
+  </g>
+
+  <!-- Blue/Green column -->
+  <g transform="translate(470,70)">
+    <rect width="390" height="280" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="195" y="34" text-anchor="middle" font-size="17" font-weight="700" fill="#16a34a">Blue / Green</text>
+    <text x="195" y="56" text-anchor="middle" font-size="12" fill="#64748b">전체 준비 후 한번에 스위칭</text>
+
+    <!-- two full sets + switch -->
+    <g transform="translate(40,86)">
+      <rect x="0" y="0" width="120" height="56" rx="8" fill="#3b82f6"/>
+      <text x="60" y="26" text-anchor="middle" font-size="12" fill="#fff">Blue v1</text>
+      <text x="60" y="44" text-anchor="middle" font-size="10" fill="#dbeafe">live</text>
+
+      <rect x="190" y="0" width="120" height="56" rx="8" fill="#16a34a"/>
+      <text x="250" y="26" text-anchor="middle" font-size="12" fill="#fff">Green v3</text>
+      <text x="250" y="44" text-anchor="middle" font-size="10" fill="#dcfce7">preview</text>
+
+      <path d="M128 28 l46 0 l0 -7 l16 11 l-16 11 l0 -7 l-46 0 z" fill="#64748b"/>
+      <text x="152" y="14" text-anchor="middle" font-size="10" fill="#16a34a">promote</text>
+    </g>
+    <text x="195" y="232" text-anchor="middle" font-size="11" fill="#475569">리소스 2배 · preview 사전 검증</text>
+    <text x="195" y="254" text-anchor="middle" font-size="11" fill="#475569">전환 빠름 · 즉시 롤백</text>
+  </g>
+</svg>
